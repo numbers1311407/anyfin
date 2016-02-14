@@ -1,0 +1,9 @@
+{
+  "name": "anyfin",
+  "devDependencies": {
+    "d3": "~3.5.15",
+    "nvd3": "~1.8.2",
+    "angular-nvd3": "~1.0.5",
+    "titip": "*"
+  }
+}

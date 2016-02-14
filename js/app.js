@@ -1,5 +1,5 @@
 ;(function (root) {
-  var app = root.app = angular.module("anyfin", []);
+  var app = root.app = angular.module("anyfin", ["nvd3"]);
 
   app.controller('IndexCtrl', ['$scope', function (scope) {
     scope.opponent = {
@@ -98,6 +98,38 @@
       return set;
     };
 
+    scope.graphOptions = {
+      chart: {
+        type: 'pieChart',
+        height: 400,
+        donut: true,
+        x: function(d){return d.key;},
+        y: function(d){return d.y;},
+        showLabels: true,
+        showLegend: false,
+        pie: {
+          startAngle: function(d) { return d.startAngle/2 -Math.PI/2 },
+          endAngle: function(d) { return d.endAngle/2 -Math.PI/2 }
+        },
+        duration: 500,
+        tooltip: {
+          keyFormatter: function (d, i) {
+            return d + ' Damage - ';
+          },
+          valueFormatter: function (d, i) {
+            return d;
+          }
+        },
+        legend: {
+          margin: {
+            top: 5,
+            right: 140,
+            bottom: 5,
+            left: 0
+          }
+        }
+      }
+    };
 
     scope.update = function () {
       var free = scope.free();
@@ -125,6 +157,19 @@
       scope.sets.min = scope.sets[0];
       scope.sets.max = scope.sets[scope.sets.length - 1];
       scope.sets.avg = sum(scope.sets, 'damage') / scope.sets.length;
+
+
+      var data = _.reduce(scope.sets, function (buckets, set) {
+        buckets[set.damage] || (buckets[set.damage] = 0);
+        buckets[set.damage] += 1;
+        return buckets;
+      }, {});
+
+      scope.graphData = _.map(data, function (val, key) {
+        return { key: key, y: val };
+      });
+
+      console.log(scope.graphData);
     };
 
     function Murloc (attrs) {
@@ -198,7 +243,7 @@
       scope.update();
     };
   }]);
-  
+
 
   root.helpers = {};
 
