@@ -1,0 +1,12 @@
+{
+  "name": "anyfin",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npm run lite",
+    "lite" : "lite-server"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "lite-server": "^2.0.1"
+  }
+}

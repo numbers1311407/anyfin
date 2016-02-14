@@ -1,0 +1,202 @@
+<html ng-app="anyfin">
+  <head>
+    <title>Anyfin Calculator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/titip.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="app/index.js"></script>
+  </head>
+  <body ng-controller="IndexCtrl">
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+              Anyfin Calculator
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+
+      <div class="row">
+        <div class="col-sm-12 opponent">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>Opponent Board State</h4>
+            </div>
+            <div class="panel-body">
+              <p>
+                <a ng-click="decrOpponentWl()"><i class="fa fa-minus-circle"></i></a>
+                <span ng-bind="opponent.wl"></span>
+                <a ng-click="incrOpponentWl()"><i class="fa fa-plus-circle"></i></a>
+                &ndash; Opposing Warleaders
+              </p>
+              <p>
+                <a ng-click="decrOpponentGo()"><i class="fa fa-minus-circle"></i></a>
+                <span ng-bind="opponent.go"></span>
+                <a ng-click="incrOpponentGo()"> <i class="fa fa-plus-circle"></i></a>
+                &ndash; Opposing Grimscales
+              </p>
+              <p>
+                <a ng-click="decrOpponentMurlocs()"><i class="fa fa-minus-circle"></i></a>
+                <span ng-bind="opponent.other"></span>
+                <a ng-click="incrOpponentMurlocs()"><i class="fa fa-plus-circle"></i></a>
+                &ndash; Other Opponent Murlocs
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-lg-9 board">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>Your Board State</h4>
+            </div>
+            <div class="panel-body clearfix">
+              <div class="slot">
+                <select ng-options="id as o.name for (id, o) in boardOptions" ng-model="board.slot0" ng-change="update()">
+                  <option value="" >Empty</option>
+                </select>
+              </div>
+              <div class="slot">
+                <select ng-options="id as o.name for (id, o) in boardOptions" ng-model="board.slot1" ng-change="update()">
+                  <option value="" >Empty</option>
+                </select>
+              </div>
+              <div class="slot">
+                <select ng-options="id as o.name for (id, o) in boardOptions" ng-model="board.slot2" ng-change="update()">
+                  <option value="" >Empty</option>
+                </select>
+              </div>
+              <div class="slot">
+                <select ng-options="id as o.name for (id, o) in boardOptions" ng-model="board.slot3" ng-change="update()">
+                  <option value="" >Empty</option>
+                </select>
+              </div>
+              <div class="slot">
+                <select ng-options="id as o.name for (id, o) in boardOptions" ng-model="board.slot4" ng-change="update()">
+                  <option value="" >Empty</option>
+                </select>
+              </div>
+              <div class="slot">
+                <select ng-options="id as o.name for (id, o) in boardOptions" ng-model="board.slot5" ng-change="update()">
+                  <option value="" >Empty</option>
+                </select>
+              </div>
+              <div class="slot">
+                <select ng-options="id as o.name for (id, o) in boardOptions" ng-model="board.slot6" ng-change="update()">
+                  <option value="" >Empty</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="output panel panel-default">
+            <div class="panel-heading">
+              <h4>Results</h4>
+            </div>
+            <table class="table table-hover">
+              <tr>
+                <td>
+                  Free Slots
+                </td>
+                <td class="numeric" ng-bind="free()"></td>
+              </tr>
+              <tr>
+                <td>
+                  Possible Anyfin Combinations
+                </td>
+                <td class="numeric" ng-bind="combinations"></td>
+              </tr>
+              <tr>
+                <td>
+                  Minimum Damage
+                </td>
+                <td class="numeric">
+                  <span ng-show="!sets.min">0</span>
+                  <div ng-show="sets.min" class="titip-top-left titip-wrapped">
+                    <i class="fa fa-question-circle"></i>
+                    <span ng-bind="sets.min.damage"></span>
+                    <div class="titip-content">
+                      <h4 ng-if="sets.min.onboard.length">On Board: <span ng-bind="sets.max.onboard.damage"></span></h4>
+                      <p ng-repeat="murloc in sets.min.onboard">
+                        {{murloc.name}}: {{murloc.attack}}
+                      </p>
+                      <h4 ng-if="sets.min.graveyard.length">Anyfin: <span ng-bind="sets.max.graveyard.damage"></span></h4>
+                      <p ng-repeat="murloc in sets.min.graveyard">
+                        {{murloc.name}}: {{murloc.attack}}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Maximum Damage
+                </td>
+                <td class="numeric">
+                  <span ng-show="!sets.max">0</span>
+                  <div ng-show="sets.max" class="titip-top-left titip-wrapped">
+                    <i class="fa fa-question-circle"></i>
+                    <span ng-bind="sets.max.damage"></span>
+                    <div class="titip-content">
+                      <h4 ng-if="sets.max.onboard.length">On Board: <span ng-bind="sets.max.onboard.damage"></span></h4>
+                      <p ng-repeat="murloc in sets.max.onboard">
+                        {{murloc.name}}: {{murloc.attack}}
+                      </p>
+                      <h4 ng-if="sets.max.graveyard.length">Anyfin: <span ng-bind="sets.max.graveyard.damage"></span></h4>
+                      <p ng-repeat="murloc in sets.max.graveyard">
+                        {{murloc.name}}: {{murloc.attack}}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Average Damage 
+                </td>
+                <td class="numeric">
+                  <span ng-show="sets.avg" ng-bind="sets.avg | number : 2"></span>
+                  <span ng-show="!sets.avg">0</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-lg-3 graveyard">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>Graveyard</h4>
+            </div>
+            <div class="panel-body">
+              <select 
+                ng-options="id as o.name for (id, o) in graveyardOptions"
+                ng-model="selectedGraveyardItem"
+                ng-change="onGraveyardItemChange()" >
+
+                <option value="" disabled="disabled">Add to Graveyard</option>
+              </select>
+              <ul>
+                <li ng-show="!graveyard.length">No dead murlocs!</li>
+                <li ng-repeat="murloc in graveyard track by $index">
+                  <a ng-click="removeFromGraveyard($index)">
+                    <i class="fa fa-times-circle"></i>
+                  </a>
+                  {{graveyardOptions[murloc].name}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
