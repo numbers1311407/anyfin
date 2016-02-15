@@ -23,8 +23,8 @@
       t: { 
         name: "Murloc Tidecaller",
         power: 1,
-        deckImg: '/assets/images/bars/murloc-tidecaller.png',
-        cardImg: '/assets/images/cards/tidecaller.png',
+        deckImg: 'assets/images/bars/murloc-tidecaller.png',
+        cardImg: 'assets/images/cards/tidecaller.png',
         attack: function (onboard, wl, go, total, summoned) {
           var retv = attack.call(this, onboard, wl, go);
           return retv ? retv + summoned : retv;
@@ -33,8 +33,8 @@
       g: { 
         name: "Grimscale Oracle",
         power: 1,
-        deckImg: '/assets/images/bars/grimscale-oracle.png',
-        cardImg: '/assets/images/cards/oracle.png',
+        deckImg: 'assets/images/bars/grimscale-oracle.png',
+        cardImg: 'assets/images/cards/oracle.png',
         attack: function (onboard, wl, go) {
           return attack.call(this, onboard, wl, go - 1);
         }
@@ -43,14 +43,14 @@
         name: "Bluegill Warrior",
         charge: true,
         power: 2,
-        deckImg: '/assets/images/bars/bluegill-warrior.png',
-        cardImg: '/assets/images/cards/bluegill.png'
+        deckImg: 'assets/images/bars/bluegill-warrior.png',
+        cardImg: 'assets/images/cards/bluegill.png'
       },
       w: {
         name: "Murloc Warleader",
         power: 3,
-        deckImg: '/assets/images/bars/murloc-warleader.png',
-        cardImg: '/assets/images/cards/warleader.png',
+        deckImg: 'assets/images/bars/murloc-warleader.png',
+        cardImg: 'assets/images/cards/warleader.png',
         attack: function (onboard, wl, go) {
           return attack.call(this, onboard, wl - 1, go);
         }
@@ -59,16 +59,16 @@
         name: "Old Murk-Eye",
         charge: true,
         power: 2,
-        deckImg: '/assets/images/bars/old-murk-eye.png',
-        cardImg: '/assets/images/cards/murkeye.png',
+        deckImg: 'assets/images/bars/old-murk-eye.png',
+        cardImg: 'assets/images/cards/murkeye.png',
         attack: function (onboard, wl, go, total) {
           return attack.call(this, onboard, wl, go, total) + total - 1;
         }
       },
       o: {
         name: "Other Murloc",
-        deckImg: '/assets/images/bars/murloc-tinyfin.png',
-        cardImg: '/assets/images/cards/tinyfin.png',
+        deckImg: 'assets/images/bars/murloc-tinyfin.png',
+        cardImg: 'assets/images/cards/tinyfin.png',
         power: 1
       }
     };
@@ -213,8 +213,8 @@
         { murloc: 't' },
         { murloc: 'o' },
         { name: 'Other Minion', 
-          deckImg: '/assets/images/bars/recruit.png',
-          cardImg: '/assets/images/cards/recruit.png'
+          deckImg: 'assets/images/bars/recruit.png',
+          cardImg: 'assets/images/cards/recruit.png'
         }
       ],
     };
