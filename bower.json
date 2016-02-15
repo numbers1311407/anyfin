@@ -4,6 +4,9 @@
     "d3": "~3.5.15",
     "nvd3": "~1.8.2",
     "angular-nvd3": "~1.0.5",
-    "titip": "*"
+    "titip": "*",
+    "underscore": "~1.8.3",
+    "bootstrap-sass": "bootstrap-sass-official#~3.3.6",
+    "font-awesome": "fontawesome#~4.5.0"
   }
 }

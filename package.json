@@ -1,6 +1,8 @@
 {
   "name": "anyfin",
   "version": "1.0.0",
+  "description": "Calculates all possible Anyfin Can Happen combinations given murlocs in the graveyard and the board state",
+  "repository": "https://github.com/numbers1311407/anyfin.git",
   "scripts": {
     "start": "npm run lite",
     "lite": "lite-server"
@@ -9,6 +11,9 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.2.0",
+    "gulp-uglify": "^1.5.2",
     "lite-server": "^2.0.1"
   }
 }

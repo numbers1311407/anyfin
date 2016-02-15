@@ -1,0 +1,192 @@
+/*!
+ * Anyfin styles
+ */
+
+$brand-primary: darken(#428bca, 6.5%);
+$brand-success: #5cb85c;
+$brand-info:    #5bc0de;
+$brand-warning: #f0ad4e;
+$brand-danger:  #d9534f;
+
+[ng-click] {
+  cursor: pointer;
+}
+.slot select {
+  width: 100%;
+}
+.panel .table > tbody > tr > td {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+select {
+  width: 100%;
+}
+.graveyard ul {
+  list-style: none none;
+  margin: 1em 0 0;
+  padding: 0;
+}
+.graveyard ul li {
+  padding: 2px 0;
+}
+.titip-content p {
+  margin: 0;
+}
+.titip-content h4 {
+  margin: 0 0 0.3em;
+}
+.titip-content p + h4 {
+  margin-top: 0.3em;
+}
+.titip-link {
+  border-bottom: 1px dashed #000;
+}
+.panel-heading h4 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: normal;
+  width: 60%;
+  padding-top: 6px;
+  height: 34px;
+}
+
+.deck {
+  position: relative;
+  display: inline-block;
+  margin-left: 2px;
+
+  .dropdown-menu {
+    left: auto;
+    right: 0;
+  }
+
+  ul {
+    margin-left: -8px;
+    padding: 0;
+    border: 0;
+    background: none;
+    width: 216px;
+  }
+
+  .deck-slot a {
+    height: 35px;
+    width: 100%;
+    padding: 0;
+    background-position: center right;
+    background-repeat: no-repeat;
+
+    color: #eee;
+
+    &:hover { color: #fff; }
+
+    span.deck-slot-wrapper {
+      display: block;
+      background: url(/assets/images/bars/frame.png) no-repeat;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    span span {
+      display: block;
+      text-shadow: 2px 2px #333;
+      text-indent: 32px;
+      line-height: 38px;
+      font-weight: bold;
+      font-size: 12px;
+      margin-left: 8px;
+
+      background: rgba(0, 0, 0, 0.3);
+      &:hover {
+        background: none;
+      }
+    }
+  }
+
+}
+
+ul.board {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none none;
+
+  .board-minion-remove {
+    i {
+      $color: #d9534f;
+      color: $color;
+      line-height: 25px;
+
+      &:hover {
+        color: lighten($color, 5%);
+      }
+    }
+    position: absolute;
+    top: 3px;
+    right: -5px;
+    font-size: 30px;
+    border-radius: 50%;
+    background-color: #fff;
+  }
+
+  .board-minion-input {
+    margin-top: 5px;
+    input {
+      text-align: center;
+      width: 40px;
+    }
+  }
+
+  .board-minion {
+    width: 14.28%;
+  }
+}
+
+.board-minion, .graveyard-minion {
+  position: relative;
+  float: left;
+  text-align: center;
+
+  img {
+    max-width: 100%;
+  }
+}
+
+ul.board .board-minion.graveyard-minion {
+  width: 50%;
+}
+
+.help-block {
+  font-size: 12px;
+}
+
+.btn-tooltip {
+  border-radius: 50%;
+  padding: 6px;
+}
+
+figure.calculation {
+  text-align: center;
+  height: 115px;
+  h2 {
+    font-size: 55px;
+    line-height: 1;
+  }
+  figcaption p {
+    margin: 0;
+  }
+}
+
+.fa-warning {
+  color: $brand-warning;
+
+}
+
+
+.range-sep {
+  margin: 0 -8px;
+}
+.well {
+  margin-bottom: 0;
+}
