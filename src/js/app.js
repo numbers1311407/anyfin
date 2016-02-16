@@ -156,7 +156,7 @@
           return o;
         }, {});
 
-        var data = _.reduce(_.range(mindmg, maxdmg), function (o, n) {
+        var data = _.reduce(_.range(mindmg, maxdmg+1), function (o, n) {
           o.points.push({x: n, y: o.s/setslen});
           o.s -= byScore[n] || 0;
           return o;
