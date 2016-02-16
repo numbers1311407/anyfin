@@ -16,14 +16,14 @@
         </div>
       </div>
     </nav>
-    <div class="container">
+    <div class="container ng-cloak">
       <div class="row">
-        <div class="col-sm-12 col-lg-3 graveyard">
+        <div class="col-sm-24 col-md-7 col-lg-5 graveyard">
           <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading clearfix">
               <h4 class="panel-title pull-left">Graveyard</h4>
-              <div class="btn-group pull-right">
-                <a ng-if="graveyardDirty()" class="btn btn-default" ng-click="clearGraveyard()">Clear</a>
+              <div class="pull-right">
+                <a ng-if="graveyardDirty()" class="btn btn-default" ng-click="clearGraveyard()">Reset</a>
               </div>
               <div class="clearfix"></div>
             </div>
@@ -33,12 +33,19 @@
           </div>
         </div>
 
-        <div class="col-sm-12 col-lg-9">
+        <div class="col-sm-24 col-md-17 col-lg-14">
           <div class="output panel panel-default">
+            <div class="panel-heading clearfix">
+              <h4 class="panel-title pull-left">Anyfin Can Happen!</h4>
+              <div class="pull-right">
+                <a ng-if="dirty()" class="btn btn-default" ng-click="clear()">Reset All</a>
+              </div>
+              <div class="clearfix"></div>
+            </div>
             <div class="panel-body">
               <div class="row">
 
-                <div class="col-sm-6 col-md-4">
+                <div class="col-sm-8">
                   <div class="well">
                     <figure class="calculation">
                       <h2>
@@ -53,13 +60,13 @@
                         </span>
                       </h2>
                       <figcaption>
-                        <p>Unique Combinations</p>
+                        <p>Unique Anyfin Combos</p>
                         <p class="small">(<span ng-bind="totalCombinations"></span> total)</p>
                       </figcaption>
                     </figure>
                   </div>
                 </div>
-                <div class="col-sm-6 col-md-4">
+                <div class="col-sm-8">
                   <div class="well">
                     <figure class="calculation">
                       <h2>
@@ -104,7 +111,7 @@
                     </figure>
                   </div>
                 </div>
-                <div class="col-sm-6 col-md-4">
+                <div class="col-sm-8">
                   <div class="well">
                     <figure class="calculation">
                       <h2>
@@ -119,24 +126,24 @@
                   </div>
                 </div>
               </div>
-              <div ng-if="combinations > 1" class="col-sm-12 graph">
+              <div ng-if="combinations > 1" class="col-sm-24 graph">
                 <nvd3 options="graphOptions" data="graphData"></nvd3> 
               </div>
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading clearfix">
               <h4 class="panel-title pull-left">Your Board State - {{free()}} Slots Free</h4>
               <deck class="pull-right" options="deckOptions" on-select="addToBoard" on-clear="clearBoard" board="board"></deck>
               <div class="clearfix"></div>
             </div>
             <div class="panel-body clearfix">
-              <p ng-if="!board.length">Your board is empty</p>
+              <h4 ng-if="!board.length">Your board is empty</h4>
               <ul ng-if="board.length" class="card-list clearfix">
 
                 <li class="card-minion" ng-repeat="card in board track by $index">
                   <label class="card-minion-name">{{card.name}}</label>
-                  <img ng-src="{{card.cardImg}}">
+                  <img ng-click="incrPower($index)" ng-right-click="decrPower($index)" ng-src="{{card.cardImg}}">
                   <span class="sr-only" ng-bind="card.name"></span>
                   <a class="card-minion-remove" ng-click="removeFromBoard($index)">
                     <i class="fa fa-times-circle"></i>
@@ -149,18 +156,48 @@
                   <label ng-if="card.murloc" class="card-minion-label">Base Power*</label>
                 </li>
               </ul>
-              <p class="help-block" ng-if="board.length">
-                *Base power should be adjusted to the current attack power of a murloc <i><strong>before</strong></i>
-                bonuses contingent on other murlocs in play, namely the Murk-Eye text and the Warleader Oracle buffs.
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-body clearfix">
+              <p>
+                Use the Graveyard, Your Board, and Opponent panels to track what murlocs have been played and
+                are currently in play.  As the state changes, the potential damage and other information will
+                be shown in the top panel.
+              </p>
+
+              <p>
+                The results will calculate the damage of <b>all murlocs</b>, both on board and from Anyfin.  This includes
+                special abilities like buffs a Tidecaller will receive from the Anyfin-summoned minions.  Non-murloc 
+                damage is not calculated, though it's important to add "other minions" to the board if they exist 
+                as it affects the combo damage.
+              </p>
+
+              <p>
+                If there is more than one combination of murlocs that can be summoned from Anyfin, the results will
+                show a damage range, average, and a graph which shows the percentage chance of hitting any damage
+                number in the range.  
+              </p>
+
+              <p class="help-block">
+                *The base power of murlocs on your board should be adjusted to the current attack power of a murloc 
+                <i><b>before</b></i> bonuses contingent on other murlocs in play, namely the Murk-Eye text and the 
+                Warleader/Oracle buffs.
+              </p>
+
+              <p class="help-block">
+                In addition to using the arrows, left and right clicking the murloc cards will increment/decrement 
+                their numbers.
               </p>
             </div>
           </div>
-
+        </div>
+        <div class="col-sm-24 col-md-17 col-md-push-7 col-lg-5 col-lg-push-0">
           <div class="panel panel-default opponent">
             <div class="panel-heading">
-              <h4 class="panel-title pull-left">Opponent Board State</h4>
-              <div class="btn-group pull-right">
-                <a ng-if="opponentDirty()" class="btn btn-default" ng-click="clearOpponent()">Clear</a>
+              <h4 class="panel-title pull-left">Opponent</h4>
+              <div class="pull-right">
+                <a ng-if="opponentDirty()" class="btn btn-default" ng-click="clearOpponent()">Reset</a>
               </div>
               <div class="clearfix"></div>
             </div>

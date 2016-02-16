@@ -1,5 +1,10 @@
 @import "nvd3/build/nv.d3";
 @import "titip/dist/css/titip";
+
+
+$grid-columns: 24;
+$grid-gutter-width: 15px;
+$container-large-desktop: 1240px + $grid-gutter-width;
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
 
 $fa-font-path: "../../assets/fonts";

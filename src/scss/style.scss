@@ -2,6 +2,8 @@
  * Anyfin styles
  */
 
+@import "fonts";
+
 $brand-primary: darken(#428bca, 6.5%);
 $brand-success: #5cb85c;
 $brand-info:    #5bc0de;
@@ -10,14 +12,21 @@ $brand-danger:  #d9534f;
 
 $breakpoint-md: 992px;
 $breakpoint-lg: 1200px;
+$medium-up: "only screen and (min-width: #{$breakpoint-md})";
+$large-up: "only screen and (min-width: #{$breakpoint-lg})";
 
 body {
-  background-color: #dfdfdf;
+  background-color: rgb(241, 214, 169);
+  background: url(../../assets/images/body-content-bg.jpg) 50% 50%;
 }
 
 [ng-click] {
   cursor: pointer;
 }
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 .slot select {
   width: 100%;
 }
@@ -36,6 +45,11 @@ select {
 .graveyard ul li {
   padding: 2px 0;
 }
+
+[class*='titip'][data-title]:after, .titip-content {
+  background-color: #2C0903;
+  font-size: 12px;
+}
 .titip-content p {
   margin: 0;
 }
@@ -53,7 +67,7 @@ select {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: normal;
-  width: 60%;
+  width: 50%;
   padding-top: 6px;
   height: 34px;
 }
@@ -61,11 +75,14 @@ select {
 .deck {
   position: relative;
   display: inline-block;
-  margin-left: 2px;
+  margin-left: 4px;
 
   .dropdown-menu {
     left: auto;
     right: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
   }
 
   ul {
@@ -85,7 +102,10 @@ select {
 
     color: #eee;
 
-    &:hover { color: #fff; }
+    &:hover { 
+      background-color: transparent;
+      color: #fff; 
+    }
 
     span.deck-slot-wrapper {
       display: block;
@@ -118,7 +138,7 @@ ul.card-list {
   margin: 0;
   padding: 0;
   list-style: none none;
-  min-height: 223px;
+  min-height: 202px;
 
   .card-minion-name {
     font-size: 11px;
@@ -139,7 +159,7 @@ ul.card-list {
       }
     }
     position: absolute;
-    top: 25px;
+    top: 10%;
     right: -1px;
     font-size: 28px;
     border-radius: 50%;
@@ -180,7 +200,7 @@ ul.card-list {
     width: 14.28%;
     .badge {
       border-radius: 50%;
-      font-size: 18px;
+      font-size: 15px;
     }
 
     -webkit-user-select: none;
@@ -199,12 +219,17 @@ ul.card-list {
   }
 }
 
+.opponent ul.card-list .card-minion {
+  @media #{$large-up} {
+    width: 50%;
+  }
+}
+
 
 .graveyard ul.card-list .card-minion {
   width: 20%;
 
-
-  @media only screen and (min-width: #{$breakpoint-lg}) {
+  @media #{$large-up} {
     width: 50%;
   }
 }
@@ -223,7 +248,7 @@ figure.calculation {
   text-align: center;
   height: 115px;
   h2 {
-    font-size: 55px;
+    font-size: 35px;
     line-height: 1;
   }
   figcaption p {
@@ -236,10 +261,68 @@ figure.calculation {
 
 }
 
-
 .range-sep {
-  margin: 0 -8px;
+  margin: 0 -4px 0 0;
 }
 .well {
   margin-bottom: 0;
+  background: #ffffde;
+  border-color: #CE7A34;
+}
+.navbar-default {
+  background-color: #2C0903;
+  border-radius: 0;
+  border: 1px solid #CE7A34;
+  border-width: 0 0 1px 0;
+
+  .navbar-brand {
+    color: #fff;
+    text-shadow: 1px 1px 1em #CE7a34;
+    text-transform: uppercase;
+  }
+}
+.panel-default {
+  border-color: #CE7A34;
+  -webkit-box-shadow: 3px 3px 12px -2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 3px 3px 12px -2px rgba(0,0,0,0.75);
+  box-shadow: 3px 3px 12px -2px rgba(0,0,0,0.75);
+
+  > .panel-heading {
+    color: #fff;
+    background-color: #640000;
+    text-shadow: 1px 1px #4b0000;
+    border-color: #CE7A34;
+  }
+  .panel-body {
+    background-color: #fff;
+  }
+}
+.badge {
+  background-color: #2C0903;
+  font-family: BlizQuadrataWeb;
+}
+.btn-default {
+  font-size: 13px;
+  &, 
+  &:focus {
+    background-color: #850000;
+    border-color: #a22;
+    color: #fff;
+  }
+
+  &:hover, 
+  &:active, 
+  &:active:hover, 
+  &:active:focus, 
+  .open > &.dropdown-toggle,
+  .open > &.dropdown-toggle:focus,
+  .open > &.dropdown-toggle:hover {
+    background-color: #ba0000;
+    border-color: #fff;
+    color: #fff;
+  }
+
+  &:active:hover {
+    background-color: #a30000;
+  }
 }

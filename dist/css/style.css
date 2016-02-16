@@ -1,11 +1,28 @@
 /*!
  * Anyfin styles
  */
+@font-face {
+  font-family: 'BlizQuadrataWeb';
+  src: url("../../assets/fonts/BlizQuadrataWeb.eot?#iefix") format("embedded-opentype"), url("../../assets/fonts/BlizQuadrataWeb.woff") format("woff"), url("../../assets/fonts/BlizQuadrataWeb.ttf") format("truetype"), url("../../assets/fonts/BlizQuadrataWeb.svg#BlizQuadrataWeb") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+  font-family: BlizQuadrataWeb;
+  font-weight: bold; }
+
 body {
-  background-color: #dfdfdf; }
+  color: #530000; }
+
+body {
+  background-color: #f1d6a9;
+  background: url(../../assets/images/body-content-bg.jpg) 50% 50%; }
 
 [ng-click] {
   cursor: pointer; }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important; }
 
 .slot select {
   width: 100%; }
@@ -25,6 +42,10 @@ select {
 .graveyard ul li {
   padding: 2px 0; }
 
+[class*='titip'][data-title]:after, .titip-content {
+  background-color: #2C0903;
+  font-size: 12px; }
+
 .titip-content p {
   margin: 0; }
 
@@ -42,17 +63,20 @@ select {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: normal;
-  width: 60%;
+  width: 50%;
   padding-top: 6px;
   height: 34px; }
 
 .deck {
   position: relative;
   display: inline-block;
-  margin-left: 2px; }
+  margin-left: 4px; }
   .deck .dropdown-menu {
     left: auto;
-    right: 0; }
+    right: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none; }
   .deck ul {
     margin-left: -8px;
     padding: 0;
@@ -67,6 +91,7 @@ select {
     background-repeat: no-repeat;
     color: #eee; }
     .deck .deck-slot a:hover {
+      background-color: transparent;
       color: #fff; }
     .deck .deck-slot a span.deck-slot-wrapper {
       display: block;
@@ -91,7 +116,7 @@ ul.card-list {
   margin: 0;
   padding: 0;
   list-style: none none;
-  min-height: 223px; }
+  min-height: 202px; }
   ul.card-list .card-minion-name {
     font-size: 11px;
     font-weight: normal;
@@ -100,7 +125,7 @@ ul.card-list {
     margin: 5px 0 -3px; }
   ul.card-list .card-minion-remove {
     position: absolute;
-    top: 25px;
+    top: 10%;
     right: -1px;
     font-size: 28px;
     border-radius: 50%;
@@ -134,7 +159,7 @@ ul.card-list {
     user-select: none; }
     ul.card-list .card-minion .badge {
       border-radius: 50%;
-      font-size: 18px; }
+      font-size: 15px; }
 
 .card-minion, .graveyard-minion {
   position: relative;
@@ -142,6 +167,10 @@ ul.card-list {
   text-align: center; }
   .card-minion img, .graveyard-minion img {
     max-width: 100%; }
+
+@media only screen and (min-width: 1200px) {
+  .opponent ul.card-list .card-minion {
+    width: 50%; } }
 
 .graveyard ul.card-list .card-minion {
   width: 20%; }
@@ -161,7 +190,7 @@ figure.calculation {
   text-align: center;
   height: 115px; }
   figure.calculation h2 {
-    font-size: 55px;
+    font-size: 35px;
     line-height: 1; }
   figure.calculation figcaption p {
     margin: 0; }
@@ -170,7 +199,52 @@ figure.calculation {
   color: #f0ad4e; }
 
 .range-sep {
-  margin: 0 -8px; }
+  margin: 0 -4px 0 0; }
 
 .well {
-  margin-bottom: 0; }
+  margin-bottom: 0;
+  background: #ffffde;
+  border-color: #CE7A34; }
+
+.navbar-default {
+  background-color: #2C0903;
+  border-radius: 0;
+  border: 1px solid #CE7A34;
+  border-width: 0 0 1px 0; }
+  .navbar-default .navbar-brand {
+    color: #fff;
+    text-shadow: 1px 1px 1em #CE7a34;
+    text-transform: uppercase; }
+
+.panel-default {
+  border-color: #CE7A34;
+  -webkit-box-shadow: 3px 3px 12px -2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 3px 3px 12px -2px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 3px 12px -2px rgba(0, 0, 0, 0.75); }
+  .panel-default > .panel-heading {
+    color: #fff;
+    background-color: #640000;
+    text-shadow: 1px 1px #4b0000;
+    border-color: #CE7A34; }
+  .panel-default .panel-body {
+    background-color: #fff; }
+
+.badge {
+  background-color: #2C0903;
+  font-family: BlizQuadrataWeb; }
+
+.btn-default {
+  font-size: 13px; }
+  .btn-default, .btn-default:focus {
+    background-color: #850000;
+    border-color: #a22;
+    color: #fff; }
+  .btn-default:hover, .btn-default:active, .btn-default:active:hover, .btn-default:active:focus,
+  .open > .btn-default.dropdown-toggle,
+  .open > .btn-default.dropdown-toggle:focus,
+  .open > .btn-default.dropdown-toggle:hover {
+    background-color: #ba0000;
+    border-color: #fff;
+    color: #fff; }
+  .btn-default:active:hover {
+    background-color: #a30000; }

@@ -200,6 +200,10 @@
       return _.pluck(scope.board, 'murloc');
     };
 
+    scope.boardDirty = function () {
+      return !!scope.board.length;
+    };
+
     scope.free = function () {
       return 7 - scope.board.length;
     };
@@ -292,7 +296,7 @@
     scope.graphOptions = {
       chart: {
         type: 'lineChart',
-        height: 250,
+        height: 200,
         showLegend: false,
         x: function(d){ return d.x; },
         y: function(d){ return d.y; },
@@ -357,6 +361,18 @@
       scope.board[index].power = Math.max(scope.board[index].power - 1, 0);
       scope.update();
     };
+
+    scope.dirty = function () {
+      return scope.opponentDirty() 
+        || scope.boardDirty() 
+        || scope.graveyardDirty();
+    };
+
+    scope.clear = function () {
+      scope.clearOpponent();
+      scope.clearBoard();
+      scope.clearGraveyard();
+    };
   }]);
 
 
@@ -388,7 +404,7 @@
       template:
           '<li ng-repeat="(id, value) in model" class="card-minion" title="{{name(id)}}">'
         +   '<label class="card-minion-name">{{name(id)}}</label>'
-        +   '<img ng-src="{{imageSrc(id)}}">'
+        +   '<img ng-click="incr(id)" ng-right-click="decr(id)" ng-src="{{imageSrc(id)}}">'
         +   '<p class="card-minion-bar">'
         +     '<i class="fa fa-arrow-down" ng-click="decr(id)"></i>'
         +     '<span class="badge card-minion-badge card-minion-count" ng-bind="model[id]"></span>'
@@ -426,7 +442,7 @@
       },
 
       template:
-          '<div class="btn-group">'
+          '<div>'
         +   '<a ng-if="board.length" class="btn btn-default" ng-click="onClear()">Clear</a>'
         +   '<div class="deck">'
         +     '<button data-toggle="dropdown" type="button" class="dropdown-toggle btn btn-default" ng-disabled="disabled">'
@@ -444,6 +460,19 @@
 
     }
   }]);
+
+  app.directive('ngRightClick', function ($parse) {
+    return function(scope, element, attrs) {
+      var fn = $parse(attrs.ngRightClick);
+
+      element.bind('contextmenu', function (event) {
+        scope.$apply(function () {
+          event.preventDefault();
+          fn(scope, {$event: event});
+        });
+      });
+    };
+  });
 
   root.helpers = {};
   root.helpers.combinationCap = 25000;
