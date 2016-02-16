@@ -11,6 +11,10 @@ $brand-danger:  #d9534f;
 $breakpoint-md: 992px;
 $breakpoint-lg: 1200px;
 
+body {
+  background-color: #dfdfdf;
+}
+
 [ng-click] {
   cursor: pointer;
 }

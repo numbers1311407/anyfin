@@ -1,6 +1,9 @@
 /*!
  * Anyfin styles
  */
+body {
+  background-color: #dfdfdf; }
+
 [ng-click] {
   cursor: pointer; }
 
