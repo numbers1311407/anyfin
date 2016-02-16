@@ -83,43 +83,71 @@ select {
       .deck .deck-slot a span span:hover {
         background: none; }
 
-ul.board {
+ul.card-list {
   display: block;
   margin: 0;
   padding: 0;
   list-style: none none; }
-  ul.board .board-minion-remove {
+  ul.card-list .card-minion-name {
+    font-size: 11px;
+    font-weight: normal;
+    margin: 0;
+    white-space: nowrap;
+    margin: 5px 0 -3px; }
+  ul.card-list .card-minion-remove {
     position: absolute;
     top: 3px;
     right: -5px;
     font-size: 30px;
     border-radius: 50%;
     background-color: #fff; }
-    ul.board .board-minion-remove i {
+    ul.card-list .card-minion-remove i {
       color: #d9534f;
       line-height: 25px; }
-      ul.board .board-minion-remove i:hover {
+      ul.card-list .card-minion-remove i:hover {
         color: #de6764; }
-  ul.board .board-minion-input {
+  ul.card-list .card-minion-input {
     margin-top: 5px; }
-    ul.board .board-minion-input input {
+    ul.card-list .card-minion-input input {
       text-align: center;
       width: 40px; }
-  ul.board .board-minion {
-    width: 14.28%; }
+  ul.card-list .card-minion-bar {
+    font-size: 18px;
+    margin: 0; }
+    ul.card-list .card-minion-bar i {
+      font-size: 16px; }
+    ul.card-list .card-minion-bar span {
+      margin: 0 6px; }
+  ul.card-list .card-minion-label {
+    font-size: 11px;
+    color: #666; }
+  ul.card-list .card-minion-power {
+    background-color: #d9534f; }
+  ul.card-list .card-minion {
+    width: 14.28%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none; }
+    ul.card-list .card-minion .badge {
+      border-radius: 50%;
+      font-size: 18px; }
 
-.board-minion, .graveyard-minion {
+.card-minion, .graveyard-minion {
   position: relative;
   float: left;
   text-align: center; }
-  .board-minion img, .graveyard-minion img {
+  .card-minion img, .graveyard-minion img {
     max-width: 100%; }
 
-ul.board .board-minion.graveyard-minion {
-  width: 50%; }
+.graveyard ul.card-list .card-minion {
+  width: 20%; }
+  @media only screen and (min-width: 1200px) {
+    .graveyard ul.card-list .card-minion {
+      width: 50%; } }
 
 .help-block {
-  font-size: 12px; }
+  font-size: 11px;
+  margin-bottom: 0; }
 
 .btn-tooltip {
   border-radius: 50%;

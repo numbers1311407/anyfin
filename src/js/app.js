@@ -1,10 +1,7 @@
 ;(function (root) {
   var app = root.app = angular.module("anyfin", ["nvd3"]);
 
-  app.controller('IndexCtrl', ['$scope', function (scope) {
-
-    scope.combinationCap = root.helpers.combinationCap;
-
+  var Murloc = (function () {
     function Murloc (attrs) {
       for (var attr in attrs) {
         if (attrs.hasOwnProperty(attr)) {
@@ -19,7 +16,7 @@
         return this.power + (2 * wl) + go;
       };
 
-    scope.murlocs = {
+    Murloc.murlocs = {
       t: { 
         name: "Murloc Tidecaller",
         power: 1,
@@ -66,12 +63,22 @@
         }
       },
       o: {
-        name: "Other Murloc",
+        name: "Other Murlocs",
         deckImg: 'assets/images/bars/murloc-tinyfin.png',
         cardImg: 'assets/images/cards/tinyfin.png',
         power: 1
       }
     };
+
+    return Murloc;
+  }());
+
+
+  app.controller('IndexCtrl', ['$scope', function (scope) {
+
+    scope.combinationCap = root.helpers.combinationCap;
+
+    scope.murlocs = Murloc.murlocs;
 
     scope.update = function () {
       var free = scope.free();
@@ -105,32 +112,32 @@
       var go = scope.opponent.g;
       var wl = scope.opponent.w;
 
-      // min and max are tracked as the set is iterated to avoid having to
-      // sort afterwards
-      var min;
-      var max;
-
       scope.sets = []
 
       if (gySets.length) {
-        for (var i=0, set; i<gySets.length; i++) {
-          set = scope.buildSet(onboard, gySets[i], wl, go, t);
-          if (!max || set.damage > max.damage) max = set;
-          if (!min || set.damage < min.damage) min = set;
-          scope.sets.push(set);
+        for (var i=0; i<gySets.length; i++) {
+          scope.sets.push(scope.buildSet(onboard, gySets[i], wl, go, t));
         }
       } else if (onboard.length) {
         scope.sets.push(scope.buildSet(onboard, [], wl, go, t));
       }
 
-      scope.sets.min = min || scope.sets[0];
-      scope.sets.max = max || scope.sets[0];
+      scope.sets.sort(function (a, b) {
+        return a.damage - b.damage;
+      });
+
+      var min = scope.sets.min = scope.sets[0];
+      var max = scope.sets.max = scope.sets[scope.sets.length-1];
 
       var avg = scope.sets.avg = scope.sets.length
         ? sum(scope.sets, 'damage') / scope.sets.length
         : 0;
 
       if (scope.sets.length > 1) {
+        var setslen = scope.sets.length;
+        var maxdmg = max ? max.damage : 0;
+        var mindmg = min ? min.damage : 0;
+
         var n = _.chain(scope.sets)
           .map(function (set) {
             return Math.pow(set.damage - avg, 2);
@@ -142,19 +149,27 @@
 
         scope.sets.variance = n / scope.sets.length - 1;
         scope.sets.sd = Math.sqrt(scope.sets.variance);
+
+        var byScore = _.reduce(scope.sets, function (o, set) {
+          o[set.damage] || (o[set.damage] = 0);
+          o[set.damage]++;
+          return o;
+        }, {});
+
+        var data = _.reduce(_.range(mindmg, maxdmg), function (o, n) {
+          o.points.push({x: n, y: o.s/setslen});
+          o.s -= byScore[n] || 0;
+          return o;
+        }, {s: setslen, points: []});
+
+        scope.graphData = [{
+          key: "Probability",
+          values: data.points
+        }];
       }
-
-      // Graph Data
-      // ---
-      // var data = _.reduce(scope.sets, function (buckets, set) {
-      //   buckets[set.damage] || (buckets[set.damage] = 0);
-      //   buckets[set.damage] += 1;
-      //   return buckets;
-      // }, {});
-
-      // scope.graphData = _.map(data, function (val, key) {
-      //   return { key: key, y: val };
-      // });
+      else {
+        scope.graphData = [];
+      }
     };
 
     scope.opponent = {
@@ -276,33 +291,25 @@
 
     scope.graphOptions = {
       chart: {
-        type: 'pieChart',
-        height: 400,
-        donut: true,
-        x: function(d){return d.key;},
-        y: function(d){return d.y;},
-        showLabels: true,
+        type: 'lineChart',
+        height: 250,
         showLegend: false,
-        pie: {
-          startAngle: function(d) { return d.startAngle/2 -Math.PI/2 },
-          endAngle: function(d) { return d.endAngle/2 -Math.PI/2 }
-        },
-        duration: 500,
-        tooltip: {
-          keyFormatter: function (d, i) {
-            return d + ' Damage - ';
-          },
-          valueFormatter: function (d, i) {
+        x: function(d){ return d.x; },
+        y: function(d){ return d.y; },
+        useInteractiveGuideline: true,
+        forceY: [0, 1],
+        xAxis: {
+          axisLabel: 'Damage',
+          tickFormat: function (d) {
             return d;
           }
         },
-        legend: {
-          margin: {
-            top: 5,
-            right: 140,
-            bottom: 5,
-            left: 0
-          }
+        yAxis: {
+          axisLabel: 'Probability',
+          tickFormat: function(d) {
+            return d3.format('.0%')(d);
+          },
+          axisLabelDistance: -10
         }
       }
     };
@@ -337,6 +344,58 @@
       scope.graveyard.w =
       scope.graveyard.g = 
       scope.graveyard.o = 0;
+    };
+
+    scope.incrPower = function (index) {
+      if (!scope.board[index]) return;
+      scope.board[index].power += 1;
+      scope.update();
+    };
+
+    scope.decrPower = function (index) {
+      if (!scope.board[index]) return;
+      scope.board[index].power = Math.max(scope.board[index].power - 1, 0);
+      scope.update();
+    };
+  }]);
+
+
+  app.directive('murlocCounters', [function () {
+    return {
+      restrict: 'A',
+      scope: {
+        model: '=murlocCounters',
+        options: '='
+      },
+
+      link: function (scope, elem, attrs) {
+        var options = scope.options || {};
+        scope.max = options.max || 8;
+        scope.imageSrc = function (id) {
+          return Murloc.murlocs[id].cardImg;
+        }
+        scope.name = function (id) {
+          return Murloc.murlocs[id].name;
+        }
+        scope.incr = function (id) {
+          scope.model[id] += 1;
+        }
+        scope.decr = function (id) {
+          scope.model[id] = Math.max(scope.model[id]-1, 0);
+        }
+      },
+
+      template:
+          '<li ng-repeat="(id, value) in model" class="card-minion" title="{{name(id)}}">'
+        +   '<label class="card-minion-name">{{name(id)}}</label>'
+        +   '<img ng-src="{{imageSrc(id)}}">'
+        +   '<p class="card-minion-bar">'
+        +     '<i class="fa fa-arrow-down" ng-click="decr(id)"></i>'
+        +     '<span class="badge card-minion-badge card-minion-count" ng-bind="model[id]"></span>'
+        +     '<i class="fa fa-arrow-up" ng-click="incr(id)"></i>'
+        +   '</p>'
+        +   '<label class="card-minion-label">Count</label>'
+        + '</li>'
     };
   }]);
 

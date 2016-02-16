@@ -28,38 +28,7 @@
               <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-              <ul class="board clearfix">
-                <li class="board-minion graveyard-minion">
-                  <img src="assets/images/cards/murkeye.png">
-                  <p class="board-minion-input">
-                    Count: <input type="number" step="1" min="0" max="8" placeholder="0" ng-model="graveyard.m">
-                  </p>
-                </li>
-                <li class="board-minion graveyard-minion">
-                  <img src="assets/images/cards/bluegill.png">
-                  <p class="board-minion-input">
-                    Count: <input type="number" step="1" min="0" max="8" placeholder="0" ng-model="graveyard.b">
-                  </p>
-                </li>
-                <li class="board-minion graveyard-minion">
-                  <img src="assets/images/cards/warleader.png">
-                  <p class="board-minion-input">
-                    Count: <input type="number" step="1" min="0" max="8" placeholder="0" ng-model="graveyard.w">
-                  </p>
-                </li>
-                <li class="board-minion graveyard-minion">
-                  <img src="assets/images/cards/oracle.png">
-                  <p class="board-minion-input">
-                    Count: <input type="number" step="1" min="0" max="8" placeholder="0" ng-model="graveyard.g">
-                  </p>
-                </li>
-                <li class="board-minion graveyard-minion">
-                  <img src="assets/images/cards/tinyfin.png">
-                  <p class="board-minion-input">
-                    Count: <input type="number" step="1" min="0" max="8" placeholder="0" ng-model="graveyard.o">
-                  </p>
-                </li>
-              </ul>
+              <ul class="card-list clearfix" murloc-counters="graveyard"></ul>
             </div>
           </div>
         </div>
@@ -150,12 +119,10 @@
                   </div>
                 </div>
               </div>
+              <div ng-if="combinations > 1" class="col-sm-12 graph">
+                <nvd3 options="graphOptions" data="graphData"></nvd3> 
+              </div>
             </div>
-            <!--
-            <div ng-if="combinations > 1" class="panel-body">
-              <nvd3 options="graphOptions" data="graphData"></nvd3> 
-            </div>
-            -->
           </div>
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -165,28 +132,24 @@
             </div>
             <div class="panel-body clearfix">
               <p ng-if="!board.length">Your board is empty</p>
-              <ul ng-if="board.length" class="board clearfix">
-                <li class="board-minion" ng-repeat="card in board track by $index">
+              <ul ng-if="board.length" class="card-list clearfix">
+                <li class="card-minion" ng-repeat="card in board track by $index">
                   <img ng-src="{{card.cardImg}}">
                   <span class="sr-only" ng-bind="card.name"></span>
-                  <a class="board-minion-remove" ng-click="removeFromBoard($index)">
+                  <a class="card-minion-remove" ng-click="removeFromBoard($index)">
                     <i class="fa fa-times-circle"></i>
                   </a>
-                  <p ng-if="card.murloc" class="board-minion-input">
-                    *Atk: <input type="number" step="1" min="0" placeholder="0" ng-model="card.power" ng-change="update()">
+                  <p class="card-minion-bar">
+                    <i class="fa fa-arrow-down" ng-click="decrPower($index)"></i>
+                    <span class="badge card-minion-badge card-minion-power" ng-bind="card.power"></span>
+                    <i class="fa fa-arrow-up" ng-click="incrPower($index)"></i>
                   </p>
+                  <label class="card-minion-label">Base Power*</label>
                 </li>
               </ul>
               <p class="help-block" ng-if="board.length">
-                *Atk value should reflect the base attack power of the murloc <i>before</i> buffs contingent
-                on murlocs currently in play, namely the Murk-Eye text and Warleader/Oracle buffs.  E.g. a peacekeeper'd
-                Murk-Eye's Atk should <i>always</i> be set to 1.  On the other hand, a Tidecaller who's been permanently 
-                buffed by playing another murloc should be given an Atk of 2.
-              </p>
-              <p class="help-block" ng-if="board.length">
-                The attack of minions besides murlocs is not calculated, which is why the Atk of other on board minions
-                is not listed or editable.  The tool will calculate the on board + Anyfin damage for all murlocs, but any
-                other sources of damage (other minions, your Truesilver) are left out.
+                *Base power should be adjusted to the current attack power of a murloc <i><strong>before</strong></i>
+                bonuses contingent on other murlocs in play, namely the Murk-Eye text and the Warleader Oracle buffs.
               </p>
             </div>
           </div>
@@ -200,26 +163,7 @@
               <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-              <ul class="board clearfix">
-                <li class="board-minion">
-                  <img src="assets/images/cards/warleader.png">
-                  <p class="board-minion-input">
-                    Count: <input type="number" step="1" min="0" max="7" placeholder="0" ng-model="opponent.w">
-                  </p>
-                </li>
-                <li class="board-minion">
-                  <img src="assets/images/cards/oracle.png">
-                  <p class="board-minion-input">
-                    Count: <input type="number" step="1" min="0" max="7" placeholder="0" ng-model="opponent.g">
-                  </p>
-                </li>
-                <li class="board-minion">
-                  <img src="assets/images/cards/tinyfin.png">
-                  <p class="board-minion-input">
-                    Count: <input type="number" step="1" min="0" max="7" placeholder="0" ng-model="opponent.o">
-                  </p>
-                </li>
-              </ul>
+              <ul class="card-list clearfix" murloc-counters="opponent"></ul>
             </div>
           </div>
         </div>

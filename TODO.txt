@@ -1,0 +1,45 @@
+-   Track *how* the damage from each murloc is calculated for a better read out.
+    This would be easily doable by storing components when building the attack()
+
+    e.g:
+
+        attack = function (/* all the state vars */) {
+          this.breakdown = [
+            { name: 'base': value: calcedBase },
+            { name: 'oracle buff': value: calcedOracle },
+            { name: 'warleader buff': value: calcedWarleader }
+          }
+
+          return calculatedAttack;
+        }
+
+        extendedAttack = function () {
+          var value = attack.apply(this, args);
+          if (applicable) {
+            this.breakdown.push(customSource);
+            value += customValue;
+          }
+          return value;
+        }
+
+    ... then in the template
+
+        <div class="murloc-dmg" ng-repeat="murloc in murlocs">
+          <span ng-repeat="src in breakdown">
+            <span class="plus" ng-if="!$index">+</span>
+            <span class="dmg-src" class="tooltip">
+              {{src.value}}
+              <span class="tooltip-content">
+                <span class="dmg-src-name">{{src.name}}</span>
+                <span class="dmg-src-desc">{{src.desc}}</span>
+              </span>
+            </span>
+          </span>
+        </div>
+
+    ... resulting in something looking like the following, where hovering
+    each number has a tooltip breakdown of the name/desc:
+
+        2 + 4 + 3 = 9000
+
+    ... with a tooltip over the 4 like "Warleader Buff"
