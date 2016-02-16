@@ -69,11 +69,11 @@
                           <span ng-show="sets.min" class="titip-bottom titip-wrapped">
                             <span class="titip-link" ng-bind="sets.min.damage"></span>
                             <span class="titip-content">
-                              <h4 ng-if="sets.min.onboard.length">On Board: <span ng-bind="sets.max.onboard.damage"></span></h4>
+                              <h4 ng-if="sets.min.onboard.length">On Board: <span ng-bind="sets.min.onboard.damage"></span></h4>
                               <p ng-repeat="murloc in sets.min.onboard">
                                 {{murloc.name}}: {{murloc.attack}}
                               </p>
-                              <h4 ng-if="sets.min.graveyard.length">Anyfin: <span ng-bind="sets.max.graveyard.damage"></span></h4>
+                              <h4 ng-if="sets.min.graveyard.length">Anyfin: <span ng-bind="sets.min.graveyard.damage"></span></h4>
                               <p ng-repeat="murloc in sets.min.graveyard">
                                 {{murloc.name}}: {{murloc.attack}}
                               </p>
