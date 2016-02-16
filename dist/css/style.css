@@ -90,7 +90,8 @@ ul.card-list {
   display: block;
   margin: 0;
   padding: 0;
-  list-style: none none; }
+  list-style: none none;
+  min-height: 223px; }
   ul.card-list .card-minion-name {
     font-size: 11px;
     font-weight: normal;
@@ -99,9 +100,9 @@ ul.card-list {
     margin: 5px 0 -3px; }
   ul.card-list .card-minion-remove {
     position: absolute;
-    top: 3px;
-    right: -5px;
-    font-size: 30px;
+    top: 25px;
+    right: -1px;
+    font-size: 28px;
     border-radius: 50%;
     background-color: #fff; }
     ul.card-list .card-minion-remove i {

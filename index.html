@@ -133,18 +133,20 @@
             <div class="panel-body clearfix">
               <p ng-if="!board.length">Your board is empty</p>
               <ul ng-if="board.length" class="card-list clearfix">
+
                 <li class="card-minion" ng-repeat="card in board track by $index">
+                  <label class="card-minion-name">{{card.name}}</label>
                   <img ng-src="{{card.cardImg}}">
                   <span class="sr-only" ng-bind="card.name"></span>
                   <a class="card-minion-remove" ng-click="removeFromBoard($index)">
                     <i class="fa fa-times-circle"></i>
                   </a>
-                  <p class="card-minion-bar">
+                  <p ng-if="card.murloc" class="card-minion-bar">
                     <i class="fa fa-arrow-down" ng-click="decrPower($index)"></i>
                     <span class="badge card-minion-badge card-minion-power" ng-bind="card.power"></span>
                     <i class="fa fa-arrow-up" ng-click="incrPower($index)"></i>
                   </p>
-                  <label class="card-minion-label">Base Power*</label>
+                  <label ng-if="card.murloc" class="card-minion-label">Base Power*</label>
                 </li>
               </ul>
               <p class="help-block" ng-if="board.length">

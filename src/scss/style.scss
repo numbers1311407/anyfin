@@ -118,6 +118,7 @@ ul.card-list {
   margin: 0;
   padding: 0;
   list-style: none none;
+  min-height: 223px;
 
   .card-minion-name {
     font-size: 11px;
@@ -138,9 +139,9 @@ ul.card-list {
       }
     }
     position: absolute;
-    top: 3px;
-    right: -5px;
-    font-size: 30px;
+    top: 25px;
+    right: -1px;
+    font-size: 28px;
     border-radius: 50%;
     background-color: #fff;
   }
@@ -201,6 +202,7 @@ ul.card-list {
 
 .graveyard ul.card-list .card-minion {
   width: 20%;
+
 
   @media only screen and (min-width: #{$breakpoint-lg}) {
     width: 50%;
