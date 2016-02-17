@@ -124,7 +124,7 @@
           scope.sets.push(scope.buildSet(onboard, gyValues[i], wl, go, t));
         }
       } else if (onboard.length) {
-        scope.sets.push(scope.buildSet(onboard, [], wl, go, t));
+        scope.sets.push(scope.buildSet(onboard, {}, wl, go, t));
       }
 
       scope.sets.sort(function (a, b) {
@@ -256,8 +256,9 @@
       }, 0);
     };
 
-    scope.buildSet = function (onboard, gy, wl, go, total) {
+    scope.buildSet = function (onboard, gyo, wl, go, total) {
       var set = { };
+      var murlocs = gyo.murlocs || [];
 
       var toMurloc = function (id, i, list) {
         var power, m;
@@ -274,12 +275,12 @@
         }
         // then overwrite the attack function with an attack value
         // calculated from the current state
-        m.attack = m.attack(list.onboard, wl, go, total, gy.murlocs.length);
+        m.attack = m.attack(list.onboard, wl, go, total, murlocs.length);
 
         return m;
       };
 
-      _.each(onboard.concat(gy.murlocs), function count(id) {
+      _.each(onboard.concat(murlocs), function count(id) {
         // again, account for board murloc objects vs ids
         if (id.murloc) id = id.murloc;
         // if it's an oracle, increment total oracles
@@ -294,13 +295,15 @@
       set.onboard = _.map(onboard, toMurloc);
       set.onboard.damage = sum(set.onboard, 'attack');
 
-      set.graveyard = _.map(gy.murlocs, toMurloc);
+      set.graveyard = _.map(murlocs, toMurloc);
       set.graveyard.damage = sum(set.graveyard, 'attack');
 
       set.damage = set.onboard.damage + set.graveyard.damage;
 
-      set.count = gy.count;
-      set.key = gy.key;
+      if (gyo.key) {
+        set.count = gyo.count;
+        set.key = gyo.key;
+      }
 
       return set;
     };
