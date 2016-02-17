@@ -118,6 +118,7 @@ ul.card-list {
   list-style: none none;
   min-height: 202px; }
   ul.card-list .card-minion-name {
+    display: block;
     font-size: 11px;
     font-weight: normal;
     margin: 0;
@@ -153,10 +154,16 @@ ul.card-list {
   ul.card-list .card-minion-power {
     background-color: #d9534f; }
   ul.card-list .card-minion {
-    width: 14.28%;
+    width: 50%;
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none; }
+    @media only screen and (min-width: 768px) {
+      ul.card-list .card-minion {
+        width: 20%; } }
+    @media only screen and (min-width: 992px) {
+      ul.card-list .card-minion {
+        width: 14.28%; } }
     ul.card-list .card-minion .badge {
       border-radius: 50%;
       font-size: 15px; }
@@ -172,11 +179,13 @@ ul.card-list {
   .opponent ul.card-list .card-minion {
     width: 50%; } }
 
-.graveyard ul.card-list .card-minion {
-  width: 20%; }
-  @media only screen and (min-width: 1200px) {
-    .graveyard ul.card-list .card-minion {
-      width: 50%; } }
+@media only screen and (min-width: 768px) {
+  .graveyard ul.card-list .card-minion {
+    width: 20%; } }
+
+@media only screen and (min-width: 992px) {
+  .graveyard ul.card-list .card-minion {
+    width: 50%; } }
 
 .help-block {
   font-size: 11px;

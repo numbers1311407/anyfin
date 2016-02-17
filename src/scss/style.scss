@@ -10,8 +10,11 @@ $brand-info:    #5bc0de;
 $brand-warning: #f0ad4e;
 $brand-danger:  #d9534f;
 
+$breakpoint-sm: 768px;
 $breakpoint-md: 992px;
 $breakpoint-lg: 1200px;
+
+$small-up: "only screen and (min-width: #{$breakpoint-sm})";
 $medium-up: "only screen and (min-width: #{$breakpoint-md})";
 $large-up: "only screen and (min-width: #{$breakpoint-lg})";
 
@@ -141,6 +144,7 @@ ul.card-list {
   min-height: 202px;
 
   .card-minion-name {
+    display: block;
     font-size: 11px;
     font-weight: normal;
     margin: 0;
@@ -197,7 +201,14 @@ ul.card-list {
   }
 
   .card-minion {
-    width: 14.28%;
+    width: 50%;
+
+    @media #{$small-up} {
+      width: 20%;
+    }
+    @media #{$medium-up} {
+      width: 14.28%;
+    }
     .badge {
       border-radius: 50%;
       font-size: 15px;
@@ -227,9 +238,12 @@ ul.card-list {
 
 
 .graveyard ul.card-list .card-minion {
-  width: 20%;
 
-  @media #{$large-up} {
+  @media #{$small-up} {
+    width: 20%;
+  }
+
+  @media #{$medium-up} {
     width: 50%;
   }
 }
