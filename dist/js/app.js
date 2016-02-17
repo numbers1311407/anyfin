@@ -84,7 +84,7 @@
       var free = scope.free();
       var gy = _.reduce(scope.graveyard, function (o, val, key) {
         // there's no reason to calculate past the # of free spaces
-        if (val > free) val = free;
+        // if (val > free) val = free;
         for (var i=0; i<val; i++) {
           o.push(key);
         };
@@ -95,15 +95,20 @@
 
       scope.limitReached = gySets.exception ? true : false;
 
-      scope.totalCombinations = gySets.length;
+      var tsetslen = scope.totalCombinations = gySets.length;
 
-      gySets = _.values(_.reduce(gySets, function (o, arr) {
+      gySets = _.reduce(gySets, function (o, arr) {
         var key = arr.sort().join('');
-        o[key] = arr;
+        o[key] || (o[key] = {count: 0});
+        o[key].count += 1;
+        o[key].murlocs = arr;
+        o[key].key = key;
         return o;
-      }, {}));
+      }, {});
 
-      scope.combinations = gySets.length;
+      var gyValues = _.values(gySets);
+
+      scope.combinations = gyValues.length;
 
       var onboard = _.reject(scope.board, function (minion) {
         return !minion.murloc;
@@ -114,9 +119,9 @@
 
       scope.sets = []
 
-      if (gySets.length) {
-        for (var i=0; i<gySets.length; i++) {
-          scope.sets.push(scope.buildSet(onboard, gySets[i], wl, go, t));
+      if (gyValues.length) {
+        for (var i=0; i<gyValues.length; i++) {
+          scope.sets.push(scope.buildSet(onboard, gyValues[i], wl, go, t));
         }
       } else if (onboard.length) {
         scope.sets.push(scope.buildSet(onboard, [], wl, go, t));
@@ -129,14 +134,18 @@
       var min = scope.sets.min = scope.sets[0];
       var max = scope.sets.max = scope.sets[scope.sets.length-1];
 
-      var avg = scope.sets.avg = scope.sets.length
-        ? sum(scope.sets, 'damage') / scope.sets.length
-        : 0;
-
+      var avg = scope.sets.avg = max ? max.damage : 0;
+        
       if (scope.sets.length > 1 && max.damage > 0) {
         var setslen = scope.sets.length;
         var maxdmg = max ? max.damage : 0;
         var mindmg = min ? min.damage : 0;
+
+        var tsum = _.reduce(scope.sets, function (sum, set) {
+          return sum + set.count * set.damage;
+        }, 0);
+
+        avg = scope.sets.avg = tsum / tsetslen;
 
         var n = _.chain(scope.sets)
           .map(function (set) {
@@ -152,15 +161,15 @@
 
         var byScore = _.reduce(scope.sets, function (o, set) {
           o[set.damage] || (o[set.damage] = 0);
-          o[set.damage]++;
+          o[set.damage] += set.count;
           return o;
         }, {});
 
         var data = _.reduce(_.range(mindmg, maxdmg+1), function (o, n) {
-          o.points.push({x: n, y: o.s/setslen});
+          o.points.push({x: n, y: o.s/tsetslen});
           o.s -= byScore[n] || 0;
           return o;
-        }, {s: setslen, points: []});
+        }, {s: tsetslen, points: []});
 
         scope.graphData = [{
           key: "Probability",
@@ -247,7 +256,7 @@
       }, 0);
     };
 
-    scope.buildSet = function (onboard, gySet, wl, go, total) {
+    scope.buildSet = function (onboard, gy, wl, go, total) {
       var set = { };
 
       var toMurloc = function (id, i, list) {
@@ -265,12 +274,12 @@
         }
         // then overwrite the attack function with an attack value
         // calculated from the current state
-        m.attack = m.attack(list.onboard, wl, go, total, gySet.length);
+        m.attack = m.attack(list.onboard, wl, go, total, gy.murlocs.length);
 
         return m;
       };
 
-      _.each(onboard.concat(gySet), function count(id) {
+      _.each(onboard.concat(gy.murlocs), function count(id) {
         // again, account for board murloc objects vs ids
         if (id.murloc) id = id.murloc;
         // if it's an oracle, increment total oracles
@@ -285,10 +294,13 @@
       set.onboard = _.map(onboard, toMurloc);
       set.onboard.damage = sum(set.onboard, 'attack');
 
-      set.graveyard = _.map(gySet, toMurloc);
+      set.graveyard = _.map(gy.murlocs, toMurloc);
       set.graveyard.damage = sum(set.graveyard, 'attack');
 
       set.damage = set.onboard.damage + set.graveyard.damage;
+
+      set.count = gy.count;
+      set.key = gy.key;
 
       return set;
     };
@@ -311,9 +323,9 @@
         yAxis: {
           axisLabel: 'Probability',
           tickFormat: function(d) {
-            return d3.format('.0%')(d);
+            return d3.format('.1%')(d);
           },
-          axisLabelDistance: -10
+          axisLabelDistance: 0
         }
       }
     };
