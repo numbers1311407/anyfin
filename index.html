@@ -126,7 +126,7 @@
                   </div>
                 </div>
               </div>
-              <div ng-if="combinations > 1" class="col-sm-24 graph">
+              <div ng-if="combinations > 1 && sets.max.damage > 0" class="col-sm-24 graph">
                 <nvd3 options="graphOptions" data="graphData"></nvd3> 
               </div>
             </div>

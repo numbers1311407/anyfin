@@ -133,7 +133,7 @@
         ? sum(scope.sets, 'damage') / scope.sets.length
         : 0;
 
-      if (scope.sets.length > 1) {
+      if (scope.sets.length > 1 && max.damage > 0) {
         var setslen = scope.sets.length;
         var maxdmg = max ? max.damage : 0;
         var mindmg = min ? min.damage : 0;
