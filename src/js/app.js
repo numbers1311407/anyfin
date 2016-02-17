@@ -24,7 +24,7 @@
         cardImg: 'assets/images/cards/tidecaller.png',
         attack: function (onboard, wl, go, total, summoned) {
           var retv = attack.call(this, onboard, wl, go);
-          return retv ? retv + summoned : retv;
+          return onboard ? retv + summoned : retv;
         }
       },
       g: { 
