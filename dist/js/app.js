@@ -1,87 +1,169 @@
 ;(function (root) {
-  var app = root.app = angular.module("anyfin", ["nvd3"]);
+  root.helpers = {};
 
-  var Murloc = (function () {
-    function Murloc (attrs) {
-      if ('string' === typeof attrs) {
-        attrs = Murloc.murlocs[attrs];
+  root.helpers.combinator = function (limit) {
+    return function pick (set, k) {
+      var i, j, combs, head, tailcombs;
+    
+      if (!k || k >=set.length) {
+        return [set];
       }
 
-      for (var attr in attrs) {
-        if (attrs.hasOwnProperty(attr)) {
-          this[attr] = attrs[attr];
+      combs = [];
+      
+      if (k == 1) {
+        for (i = 0; i < set.length; i++) {
+          combs.push([set[i]]);
+          if (combs.length == limit) break;
+        }
+        return combs;
+      }
+      
+      for (i = 0; i < set.length - k + 1; i++) {
+        head = set.slice(i, i+1);
+        tailcombs = pick(set.slice(i + 1), k - 1);
+        for (j = 0; j < tailcombs.length; j++) {
+          combs.push(head.concat(tailcombs[j]));
+          if (combs.length == limit) {
+            i = set.length - k + 1;
+            break;
+          }
         }
       }
+
+      return combs;
+    }
+  };
+
+  root.helpers.sum = function (arr, prop) {
+    return _.reduce(arr, function (mem, o) {
+      return mem + o[prop];
+    }, 0);
+  };
+
+
+  root.helpers.bm = (function () {
+    var time, marks;
+
+    function start () {
+      time = Date.now();
+      marks = [];
     }
 
-    var attack = 
-      Murloc.prototype.attack = function (onboard, data) {
-        if (!onboard && !this.charge) return 0;
-        return this.power + (2 * data.w) + data.g;
-      };
-
-    Murloc.murlocs = {
-      t: { 
-        name: "Murloc Tidecaller",
-        power: 1,
-        deckImg: 'assets/images/bars/murloc-tidecaller.png',
-        cardImg: 'assets/images/cards/tidecaller.png',
-        attack: function (onboard, data) {
-          var retv = attack.call(this, onboard, data);
-          return onboard ? retv + data.summoned : retv;
-        }
-      },
-      g: { 
-        name: "Grimscale Oracle",
-        power: 1,
-        deckImg: 'assets/images/bars/grimscale-oracle.png',
-        cardImg: 'assets/images/cards/oracle.png',
-        attack: function (onboard, data) {
-          data.g -= 1;
-          return attack.call(this, onboard, data);
-        }
-      },
-      b: { 
-        name: "Bluegill Warrior",
-        charge: true,
-        power: 2,
-        deckImg: 'assets/images/bars/bluegill-warrior.png',
-        cardImg: 'assets/images/cards/bluegill.png'
-      },
-      w: {
-        name: "Murloc Warleader",
-        power: 3,
-        deckImg: 'assets/images/bars/murloc-warleader.png',
-        cardImg: 'assets/images/cards/warleader.png',
-        attack: function (onboard, data) {
-          data.w -= 1;
-          return attack.call(this, onboard, data);
-        }
-      },
-      m: {
-        name: "Old Murk-Eye",
-        charge: true,
-        power: 2,
-        deckImg: 'assets/images/bars/old-murk-eye.png',
-        cardImg: 'assets/images/cards/murkeye.png',
-        attack: function (onboard, data) {
-          return attack.call(this, onboard, data) + data.total - 1;
-        }
-      },
-      o: {
-        name: "Other Murlocs",
-        deckImg: 'assets/images/bars/murloc-tinyfin.png',
-        cardImg: 'assets/images/cards/tinyfin.png',
-        power: 1
-      }
+    function mark (message) {
+      marks.push({ m: message, t: Date.now() });
     };
 
-    return Murloc;
-  }());
+    function finish (showTime) {
+      var split;
 
+      console.log('bm results\n--------\nstart');
 
-  function State (obj) {
-    this.set(obj, false);
+      _.each(marks, function (mark, i) {
+        split = mark.t - (i ? marks[i-1].t : time);
+        console.log(i+':', split, mark.m || '', showTime ? mark.t : '');
+      });
+
+      console.log('total: '+(Date.now() - time)+'ms\n--------');
+    }
+
+    start();
+
+    return {
+      start: start,
+      mark: mark,
+      finish: finish
+    }
+  })();
+
+})(window.root || (window.root = {}));
+
+;(function (root) {
+  root.Murloc = Murloc;
+
+  function Murloc (attrs) {
+    if ('string' === typeof attrs) {
+      attrs = Murloc.murlocs[attrs];
+    }
+
+    for (var attr in attrs) {
+      if (attrs.hasOwnProperty(attr)) {
+        this[attr] = attrs[attr];
+      }
+    }
+  }
+
+  var attack = 
+    Murloc.prototype.attack = function (onboard, data) {
+      if (!onboard && !this.charge) return 0;
+      return this.power + (2 * data.w) + data.g;
+    };
+
+  Murloc.murlocs = {
+    t: { 
+      name: "Murloc Tidecaller",
+      power: 1,
+      deckImg: 'assets/images/bars/murloc-tidecaller.png',
+      cardImg: 'assets/images/cards/tidecaller.png',
+      attack: function (onboard, data) {
+        var retv = attack.call(this, onboard, data);
+        return onboard ? retv + data.summoned : retv;
+      }
+    },
+    g: { 
+      name: "Grimscale Oracle",
+      power: 1,
+      deckImg: 'assets/images/bars/grimscale-oracle.png',
+      cardImg: 'assets/images/cards/oracle.png',
+      attack: function (onboard, data) {
+        data.g -= 1;
+        return attack.call(this, onboard, data);
+      }
+    },
+    b: { 
+      name: "Bluegill Warrior",
+      charge: true,
+      power: 2,
+      deckImg: 'assets/images/bars/bluegill-warrior.png',
+      cardImg: 'assets/images/cards/bluegill.png'
+    },
+    w: {
+      name: "Murloc Warleader",
+      power: 3,
+      deckImg: 'assets/images/bars/murloc-warleader.png',
+      cardImg: 'assets/images/cards/warleader.png',
+      attack: function (onboard, data) {
+        data.w -= 1;
+        return attack.call(this, onboard, data);
+      }
+    },
+    m: {
+      name: "Old Murk-Eye",
+      charge: true,
+      power: 2,
+      deckImg: 'assets/images/bars/old-murk-eye.png',
+      cardImg: 'assets/images/cards/murkeye.png',
+      attack: function (onboard, data) {
+        return attack.call(this, onboard, data) + data.total - 1;
+      }
+    },
+    o: {
+      name: "Other Murlocs",
+      deckImg: 'assets/images/bars/murloc-tinyfin.png',
+      cardImg: 'assets/images/cards/tinyfin.png',
+      power: 1
+    }
+  };
+
+})(window.root || (window.root = {}));
+
+;(function (root) {
+  root.State = State;
+
+  function State (obj, options) {
+    this.options = options || {};
+    this.combinations = root.helpers.combinator(options.combinationLimit);
+    this.set(obj);
   }
 
   State.prototype.free = function () {
@@ -103,9 +185,18 @@
   State.prototype.set = function (obj) {
     obj = _.pick(obj, 'graveyard', 'board', 'opponent');
 
-    obj.graveyard && this.setGraveyard(obj.graveyard);
-    obj.board     && this.setBoard(obj.board);
+    var free = this.free();
+
     obj.opponent  && this.setOpponent(obj.opponent);
+    obj.board     && this.setBoard(obj.board);
+
+    if (obj.graveyard) {
+      this.setGraveyard(obj.graveyard);
+    } 
+    // clunky, but refresh the graveyard if the free slot count has changed
+    else if (this.free() !== free) {
+      this.setGraveyard(this.graveyard);
+    }
 
     this.prepare();
   };
@@ -128,18 +219,17 @@
     }, []);
 
     this._graveyard.combos = 
-      root.helpers.combinations(this._graveyard.list, this.free());
+      this.combinations(this._graveyard.list, this.free());
 
     this._graveyard.summoned = 
       this._graveyard.combos[0] ? this._graveyard.combos[0].length : 0;
 
     this._graveyard.data = 
       _.reduce(this._graveyard.combos, function (o, arr) {
-        var key = arr.sort().join('');
+        var key = arr.join('');
         o[key] || (o[key] = {count: 0});
         o[key].count += 1;
         o[key].set = arr;
-        o[key].key = key;
         return o;
       }, {});
   };
@@ -189,7 +279,7 @@
         power = id.power;
         id = id.murloc;
       }
-      m = new Murloc(id);
+      m = new root.Murloc(id);
 
       // if power was found, overwrite it on the murloc obj
       if ('undefined' !== typeof power) {
@@ -210,10 +300,8 @@
 
     set.damage = set.onboard.damage + set.graveyard.damage;
 
-    // unless there are no summons, the combo data will have a key
-    if (combo.key) {
+    if (combo.count) {
       set.count = combo.count;
-      set.key = combo.key;
     }
 
     this.sets.push(set);
@@ -312,10 +400,15 @@
     this.graphData = [{ key: "Probability", values: points.reverse() }];
   };
 
+})(window.root || (window.root = {}));
+
+;(function (root) {
+  var app = root.app = angular.module("anyfin", ["nvd3"]);
 
   app.controller('IndexCtrl', ['$scope', function (scope) {
-    scope.combinationCap = root.helpers.combinationCap;
-    scope.murlocs = Murloc.murlocs;
+    scope.combinationLimit = 60000;
+
+    scope.murlocs = root.Murloc.murlocs;
 
     //
     // Board
@@ -348,13 +441,13 @@
     scope.incrPower = function (index) {
       if (!scope.board[index]) return;
       scope.board[index].power += 1;
-      scope.update();
+      scope.state.set({board: scope.board});
     };
 
     scope.decrPower = function (index) {
       if (!scope.board[index]) return;
       scope.board[index].power = Math.max(scope.board[index].power - 1, 0);
-      scope.update();
+      scope.state.set({board: scope.board});
     };
 
 
@@ -382,11 +475,11 @@
     //
 
     scope.graveyard = {
-      m: 0,
       b: 0,
-      w: 0,
       g: 0,
-      o: 0
+      m: 0,
+      o: 0,
+      w: 0
     };
 
     scope.graveyardDirty = function () {
@@ -423,26 +516,13 @@
     };
 
     // stick the state on the window for easy debugging
-    window.state = scope.state = new State({
+    window.state = scope.state = new root.State({
       board: scope.board,
       graveyard: scope.graveyard,
       opponent: scope.opponent
+    }, {
+      combinationLimit: scope.combinationLimit
     });
-
-    scope.updateGraveyard = function (is, was) {
-      if (angular.equals(is, was)) return;
-      scope.state.set({graveyard: scope.graveyard});
-    };
-
-    scope.updateOpponent = function (is, was) {
-      if (angular.equals(is, was)) return;
-      scope.state.set({opponent: scope.opponent});
-    };
-
-    scope.updateBoard = function (is, was) {
-      if (angular.equals(is, was)) return;
-      scope.state.set({board: scope.board});
-    };
 
     scope.deckOptions = {
       murlocs: scope.murlocs,
@@ -489,9 +569,15 @@
       'opponent.w', 
       'opponent.g', 
       'opponent.o'
-    ], scope.updateOpponent);
+    ], function (is, was) {
+      if (angular.equals(is, was)) return;
+      scope.state.set({opponent: scope.opponent});
+    });
 
-    scope.$watchCollection('board', scope.updateBoard);
+    scope.$watchCollection('board', function (is, was) {
+      if (angular.equals(is, was)) return;
+      scope.state.set({board: scope.board});
+    });
 
     scope.$watchGroup([
       'graveyard.m', 
@@ -499,7 +585,10 @@
       'graveyard.w',
       'graveyard.g', 
       'graveyard.o'
-    ], scope.updateGraveyard);
+    ], function (is, was) {
+      if (angular.equals(is, was)) return;
+      scope.state.set({graveyard: scope.graveyard});
+    });
   }]);
 
 
@@ -515,10 +604,10 @@
         var options = scope.options || {};
         scope.max = options.max || 8;
         scope.imageSrc = function (id) {
-          return Murloc.murlocs[id].cardImg;
+          return root.Murloc.murlocs[id].cardImg;
         }
         scope.name = function (id) {
-          return Murloc.murlocs[id].name;
+          return root.Murloc.murlocs[id].name;
         }
         scope.incr = function (id) {
           scope.model[id] += 1;
@@ -600,50 +689,5 @@
       });
     };
   });
-
-  root.helpers = {};
-  root.helpers.combinationCap = 30000;
-
-  root.helpers.combinations = (function () {
-    var fn = function(n, src, got, all) {
-      if (n == 0) {
-        if (got.length > 0) {
-          all[all.length] = got;
-        }
-        return;
-      }
-      for (var j = 0; j < src.length; j++) {
-        fn(n - 1, src.slice(j + 1), got.concat([src[j]]), all);
-        if (all.length >= root.helpers.combinationCap) {
-          throw "Subset calculation cap reached";
-        }
-      }
-      return;
-    }
-
-    return function (a, count) {
-      var all = [], retv;
-
-      if (count > a.length) {
-        count = a.length;
-      }
-
-      try {
-        fn(count, a, [], all);
-      } catch (e) {
-        all.exception = e;
-      }
-
-      return all;
-    }
-  })();
-
-  root.helpers.sum = function (arr, prop) {
-    return _.reduce(arr, function (mem, o) {
-      return mem + o[prop];
-    }, 0);
-  };
-
-
 
 })(window.root || (window.root = {}));

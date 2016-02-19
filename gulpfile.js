@@ -3,6 +3,7 @@ var gulp = require("gulp")
   , rename = require("gulp-rename")
   , uglify = require("gulp-uglify")
   , sass = require("gulp-sass")
+  , order = require("gulp-order")
 
 gulp.task("vendor-js", function () {
   var paths = [
@@ -41,6 +42,11 @@ gulp.task("vendor-css", function () {
 
 gulp.task("app-js", function () {
   gulp.src("src/js/**/*.js")
+    .pipe(order([
+      "helpers.js",
+      "models/*.js",
+      "app.js"
+    ], {base: "src/js"}))
     .pipe(concat("app.js"))
     .pipe(gulp.dest("dist/js"));
 });

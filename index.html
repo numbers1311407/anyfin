@@ -50,21 +50,23 @@
                     <figure class="calculation">
                       <h2>
                         <span ng-bind="state.sets.length"></span>
-                        <span ng-show="state._graveyard.combos.exception" class="titip-right titip-wrapped">
+                        <span ng-show="state.sets.total >= combinationLimit" class="titip-right titip-wrapped">
                           <i class="fa fa-warning"></i>
                           <span class="titip-content">
                             You've reached the calculation limit for possible non-unique combinations 
-                            ({{combinationCap}}), 
-                            so your results may not be 100% accurate.  Did that many murlocs really die?
+                            ({{combinationLimit}}).  This means some outcomes will be dropped and your results will not be accurate.
+                            Did that many murlocs really die?
                           </span>
                         </span>
                       </h2>
-                      <figcaption ng-if="!state.sets.length || state.sets.length > 1">
-                        <p>Possible Outcomes</p>
-                        <p ng-if="state.sets.length > 1" class="small">(<span ng-bind="state.sets.total"></span> variations)</p>
-                      </figcaption>
-                      <figcaption ng-if="state.sets.length == 1">
-                        <p>Guaranteed Outcome</p>
+                      <figcaption>
+                        <p>
+                          <span ng-if="!state.sets.length || state.sets.length > 1">Possible Outcomes</span>
+                          <span ng-if="state.sets.length == 1">Guaranteed Outcome</span>
+                        </p>
+                        <p ng-if="state.sets.length > 1" class="small">
+                          (<span ng-bind="state.sets.total"></span><span ng-if="state.sets.total >= combinationLimit">+</span> variations)
+                        </p>
                       </figcaption>
                     </figure>
                   </div>
