@@ -80,22 +80,37 @@
   }());
 
 
-  function State (board, graveyard, opponent) {
-    this.board = angular.copy(board);
-    this.graveyard = {raw: angular.copy(graveyard)};
-    this.opponent = angular.copy(opponent);
-
-    this.initGraveyard();
-    this.buildSets();
-    this.buildMetrics();
-    this.buildGraphData();
-  }
+  function State () {}
 
   State.prototype.free = function () {
-    return 7 - this.board.length;
+    return 7 - (this.board ? this.board.length : 0);
   };
 
-  State.prototype.initGraveyard = function () {
+  State.prototype.ready = function () {
+    return !!this.graveyard && !!this.board && !!this.opponent;
+  };
+
+  State.prototype.prepare = function () {
+    if (this.ready()) {
+      this.prepareSets();
+      this.prepareMetrics();
+      this.prepareGraphData();
+    }
+  };
+
+  State.prototype.setOpponent = function (opponent) {
+    this.opponent = angular.copy(opponent);
+    this.prepare();
+  };
+
+  State.prototype.setBoard = function (board) {
+    this.board = angular.copy(board);
+    this.prepare();
+  };
+
+  State.prototype.setGraveyard = function (graveyard) {
+    this.graveyard = {raw: angular.copy(graveyard)};
+
     this.graveyard.list = _.reduce(this.graveyard.raw, function (o, val, key) {
       for (var i=0; i<val; i++) { o.push(key); };
       return o;
@@ -116,10 +131,11 @@
         o[key].key = key;
         return o;
       }, {});
+
+    this.prepare();
   };
 
   /**
-   *
    * param [Object] onboard - an array of murloc data objects representing the board
    * param Object combo - data about a particular graveyard summon combo
    * @api private
@@ -194,7 +210,7 @@
     this.sets.push(set);
   };
 
-  State.prototype.buildSets = function () {
+  State.prototype.prepareSets = function () {
     this.sets = [];
 
     var onboard = _.reject(this.board, function (minion) {
@@ -226,7 +242,7 @@
     }, {});
   };
 
-  State.prototype.buildMetrics = function () {
+  State.prototype.prepareMetrics = function () {
     this.metrics = {};
 
     this.metrics.min = this.sets.min ? this.sets.min.damage : 0;
@@ -264,7 +280,7 @@
     }
   };
 
-  State.prototype.buildGraphData = function () {
+  State.prototype.prepareGraphData = function () {
     if (!this.metrics.probabilities) {
       this.graphData = [];
       return;
@@ -306,12 +322,8 @@
       return !!scope.board.length;
     };
 
-    scope.free = function () {
-      return 7 - scope.board.length;
-    };
-
     scope.addToBoard = function (card) {
-      if (scope.free()) {
+      if (state.free()) {
         scope.board.push( angular.copy(card) );
       }
     };
@@ -401,9 +413,19 @@
       scope.clearGraveyard();
     };
 
-    scope.update = function () {
-      scope.state = new State(scope.board, scope.graveyard, scope.opponent);
-      window.state = scope.state;
+    // stick the state on the window for easy debugging
+    window.state = scope.state = new State();
+
+    scope.updateGraveyard = function () {
+      scope.state.setGraveyard(scope.graveyard);
+    };
+
+    scope.updateOpponent = function () {
+      scope.state.setOpponent(scope.opponent);
+    };
+
+    scope.updateBoard = function () {
+      scope.state.setBoard(scope.board);
     };
 
     scope.deckOptions = {
@@ -447,13 +469,13 @@
       }
     };
 
-    // TODO these should all be in one watch if possible
-    //
     scope.$watchGroup([
       'opponent.w', 
       'opponent.g', 
       'opponent.o'
-    ], scope.update);
+    ], scope.updateOpponent);
+
+    scope.$watchCollection('board', scope.updateBoard);
 
     scope.$watchGroup([
       'graveyard.m', 
@@ -461,9 +483,7 @@
       'graveyard.w',
       'graveyard.g', 
       'graveyard.o'
-    ], scope.update);
-
-    scope.$watchCollection('board', scope.update);
+    ], scope.updateGraveyard);
   }]);
 
 
