@@ -250,6 +250,14 @@
         .value() / this.sets.length - 1;
 
       this.metrics.sd = Math.sqrt(this.metrics.variance);
+
+      var tCombos = rCombos = this.sets.total;
+      this.metrics.probabilities = 
+        _.reduce(this.sets.grouped, function (o, data, score) {
+          o[score] = rCombos/tCombos;
+          rCombos -= data.count;
+          return o;
+        }, {});
     }
     else {
       this.metrics.avg = this.metrics.min;
@@ -257,34 +265,26 @@
   };
 
   State.prototype.buildGraphData = function () {
-    var tCombos = this.sets.total;
-    var grouped = this.sets.grouped;
+    if (!this.metrics.probabilities) {
+      this.graphData = [];
+      return;
+    }
 
-    // Get a range of all possible values from the min score to the max score
-    var range = _.range(this.metrics.min, this.metrics.max+1);
+    var range = _.range(this.metrics.min, this.metrics.max+1).reverse();
+    var runningProbability;
+    var probabilities = this.metrics.probabilities;
 
-    // Iterate over the range, while subtracting the count of remaining combos
-    // (rCombos) with the given score along the way.  This gives the probability
-    // of each score being reached.  E.g say the possible scores are 
-    // [10,15,15,20].  We iterate from 10-20, passing the total combo count
-    // as rCombos.
-    //
-    // - score=10; rCombos=4 (total combo count)
-    //   - rCombos/tCombos == 4/4, 100% chance
-    // - score=11,12,13,14,15
-    //   - rCombos/tCombos == 3/4, 75% chance
-    // - score=16-20
-    //   - rCombos/tCombos == 1/4, 25% chance
-    //
-    var data = _.reduce(range, function (o, score) {
-      o.points.push({ x: score, y: o.rCombos/tCombos });
-      o.rCombos -= grouped[score] ? grouped[score].count : 0;
-      return o;
-    }, {rCombos: tCombos, points: []});
+    var points = _.map(range, function (score) {
+      if (probabilities[score]) {
+        runningProbability = probabilities[score];
+      }
+      return {
+        x: score,
+        y: runningProbability
+      }
+    });
 
-    this.graphData = data.points.length
-      ? [{ key: "Probability", values: data.points }]
-      : [];
+    this.graphData = [{ key: "Probability", values: points.reverse() }];
   };
 
 
