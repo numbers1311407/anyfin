@@ -38,6 +38,7 @@
             <div class="panel-heading clearfix">
               <h4 class="panel-title pull-left">Anyfin Can Happen!</h4>
               <div class="pull-right">
+                <a ng-if="state.history.length" class="btn btn-default" ng-click="back()">Step Back</a>
                 <a ng-if="dirty()" class="btn btn-default" ng-click="clear()">Reset All</a>
               </div>
               <div class="clearfix"></div>
@@ -49,7 +50,7 @@
                     <figure class="calculation">
                       <h2>
                         <span ng-bind="state.sets.length"></span>
-                        <span ng-show="state.graveyard.combos.exception" class="titip-right titip-wrapped">
+                        <span ng-show="state._graveyard.combos.exception" class="titip-right titip-wrapped">
                           <i class="fa fa-warning"></i>
                           <span class="titip-content">
                             You've reached the calculation limit for possible non-unique combinations 

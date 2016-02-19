@@ -80,7 +80,9 @@
   }());
 
 
-  function State () {}
+  function State (obj) {
+    this.set(obj, false);
+  }
 
   State.prototype.free = function () {
     return 7 - (this.board ? this.board.length : 0);
@@ -98,32 +100,41 @@
     }
   };
 
+  State.prototype.set = function (obj) {
+    obj = _.pick(obj, 'graveyard', 'board', 'opponent');
+
+    obj.graveyard && this.setGraveyard(obj.graveyard);
+    obj.board     && this.setBoard(obj.board);
+    obj.opponent  && this.setOpponent(obj.opponent);
+
+    this.prepare();
+  };
+
   State.prototype.setOpponent = function (opponent) {
     this.opponent = angular.copy(opponent);
-    this.prepare();
   };
 
   State.prototype.setBoard = function (board) {
     this.board = angular.copy(board);
-    this.prepare();
   };
 
   State.prototype.setGraveyard = function (graveyard) {
-    this.graveyard = {raw: angular.copy(graveyard)};
+    this.graveyard = angular.copy(graveyard);
+    this._graveyard = {};
 
-    this.graveyard.list = _.reduce(this.graveyard.raw, function (o, val, key) {
+    this._graveyard.list = _.reduce(this.graveyard, function (o, val, key) {
       for (var i=0; i<val; i++) { o.push(key); };
       return o;
     }, []);
 
-    this.graveyard.combos = 
-      root.helpers.combinations(this.graveyard.list, this.free());
+    this._graveyard.combos = 
+      root.helpers.combinations(this._graveyard.list, this.free());
 
-    this.graveyard.summoned = 
-      this.graveyard.combos[0] ? this.graveyard.combos[0].length : 0;
+    this._graveyard.summoned = 
+      this._graveyard.combos[0] ? this._graveyard.combos[0].length : 0;
 
-    this.graveyard.data = 
-      _.reduce(this.graveyard.combos, function (o, arr) {
+    this._graveyard.data = 
+      _.reduce(this._graveyard.combos, function (o, arr) {
         var key = arr.sort().join('');
         o[key] || (o[key] = {count: 0});
         o[key].count += 1;
@@ -131,8 +142,6 @@
         o[key].key = key;
         return o;
       }, {});
-
-    this.prepare();
   };
 
   /**
@@ -148,7 +157,7 @@
     // opponents murlocs, and is build up as sets are added.  This is passed
     // along to each murloc to determine their damage
     var murlocs = {
-      summoned: this.graveyard.summoned,
+      summoned: this._graveyard.summoned,
       total: this.opponent.o + this.opponent.w + this.opponent.g,
       g: this.opponent.g,
       w: this.opponent.w
@@ -217,8 +226,8 @@
       return !minion.murloc;
     });
 
-    if (this.graveyard.combos.length) {
-      _.each(this.graveyard.data, function (data, key) {
+    if (this._graveyard.combos.length) {
+      _.each(this._graveyard.data, function (data, key) {
         this.addSet(onboard, data);
       }, this);
     } 
@@ -232,7 +241,7 @@
 
     this.sets.min = this.sets[0];
     this.sets.max = this.sets[this.sets.length-1];
-    this.sets.total = this.graveyard.combos.length || 1;
+    this.sets.total = this._graveyard.combos.length || 1;
 
     this.sets.grouped = _.reduce(this.sets, function (o, set) {
       o[set.damage] || (o[set.damage] = {count: 0, set: []});
@@ -414,18 +423,25 @@
     };
 
     // stick the state on the window for easy debugging
-    window.state = scope.state = new State();
+    window.state = scope.state = new State({
+      board: scope.board,
+      graveyard: scope.graveyard,
+      opponent: scope.opponent
+    });
 
-    scope.updateGraveyard = function () {
-      scope.state.setGraveyard(scope.graveyard);
+    scope.updateGraveyard = function (is, was) {
+      if (angular.equals(is, was)) return;
+      scope.state.set({graveyard: scope.graveyard});
     };
 
-    scope.updateOpponent = function () {
-      scope.state.setOpponent(scope.opponent);
+    scope.updateOpponent = function (is, was) {
+      if (angular.equals(is, was)) return;
+      scope.state.set({opponent: scope.opponent});
     };
 
-    scope.updateBoard = function () {
-      scope.state.setBoard(scope.board);
+    scope.updateBoard = function (is, was) {
+      if (angular.equals(is, was)) return;
+      scope.state.set({board: scope.board});
     };
 
     scope.deckOptions = {
