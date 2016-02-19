@@ -44,13 +44,12 @@
             </div>
             <div class="panel-body">
               <div class="row">
-
                 <div class="col-sm-8">
                   <div class="well">
                     <figure class="calculation">
                       <h2>
-                        <span ng-bind="combinations"></span>
-                        <span ng-show="limitReached" class="titip-right titip-wrapped">
+                        <span ng-bind="state.sets.length"></span>
+                        <span ng-show="state.graveyard.combos.exception" class="titip-right titip-wrapped">
                           <i class="fa fa-warning"></i>
                           <span class="titip-content">
                             You've reached the calculation limit for possible non-unique combinations 
@@ -59,9 +58,12 @@
                           </span>
                         </span>
                       </h2>
-                      <figcaption>
-                        <p>Unique Anyfin Combos</p>
-                        <p class="small">(<span ng-bind="totalCombinations"></span> total)</p>
+                      <figcaption ng-if="!state.sets.length || state.sets.length > 1">
+                        <p>Possible Results</p>
+                        <p ng-if="state.sets.length > 1" class="small">(<span ng-bind="state.sets.total"></span> variations)</p>
+                      </figcaption>
+                      <figcaption ng-if="state.sets.length == 1">
+                        <p>Guaranteed Result</p>
                       </figcaption>
                     </figure>
                   </div>
@@ -71,33 +73,33 @@
                     <figure class="calculation">
                       <h2>
                         <span class="damage-range">
-                          <span class="titip-bottom titip-link" data-title="No damage to explain yet!" ng-show="!sets.min">0</span>
+                          <span class="titip-bottom titip-link" data-title="No damage to explain yet!" ng-show="!state.sets.min">0</span>
 
-                          <span ng-show="sets.min" class="titip-bottom titip-wrapped">
-                            <span class="titip-link" ng-bind="sets.min.damage"></span>
+                          <span ng-show="state.sets.min" class="titip-bottom titip-wrapped">
+                            <span class="titip-link" ng-bind="state.metrics.min"></span>
                             <span class="titip-content">
-                              <h4 ng-if="sets.min.onboard.length">On Board: <span ng-bind="sets.min.onboard.damage"></span></h4>
-                              <p ng-repeat="murloc in sets.min.onboard">
+                              <h4 ng-if="state.sets.min.onboard.length">On Board: <span ng-bind="state.sets.min.onboard.damage"></span></h4>
+                              <p ng-repeat="murloc in state.sets.min.onboard">
                                 {{murloc.name}}: {{murloc.attack}}
                               </p>
-                              <h4 ng-if="sets.min.graveyard.length">Anyfin: <span ng-bind="sets.min.graveyard.damage"></span></h4>
-                              <p ng-repeat="murloc in sets.min.graveyard">
+                              <h4 ng-if="state.sets.min.graveyard.length">Anyfin: <span ng-bind="state.sets.min.graveyard.damage"></span></h4>
+                              <p ng-repeat="murloc in state.sets.min.graveyard">
                                 {{murloc.name}}: {{murloc.attack}}
                               </p>
                             </span>
                           </span>
                         </span>
-                        <span ng-show="combinations > 1" class="damage-range">
+                        <span ng-show="state.sets.length > 1" class="damage-range">
                           <span class="small range-sep">to</span>
                           <span class="titip-bottom titip-wrapped">
-                            <span class="titip-link" ng-bind="sets.max.damage"></span>
+                            <span class="titip-link" ng-bind="state.metrics.max"></span>
                             <span class="titip-content">
-                              <h4 ng-if="sets.max.onboard.length">On Board: <span ng-bind="sets.max.onboard.damage"></span></h4>
-                              <p ng-repeat="murloc in sets.max.onboard">
+                              <h4 ng-if="state.sets.max.onboard.length">On Board: <span ng-bind="state.sets.max.onboard.damage"></span></h4>
+                              <p ng-repeat="murloc in state.sets.max.onboard">
                                 {{murloc.name}}: {{murloc.attack}}
                               </p>
-                              <h4 ng-if="sets.max.graveyard.length">Anyfin: <span ng-bind="sets.max.graveyard.damage"></span></h4>
-                              <p ng-repeat="murloc in sets.max.graveyard">
+                              <h4 ng-if="state.sets.max.graveyard.length">Anyfin: <span ng-bind="state.sets.max.graveyard.damage"></span></h4>
+                              <p ng-repeat="murloc in state.sets.max.graveyard">
                                 {{murloc.name}}: {{murloc.attack}}
                               </p>
                             </span>
@@ -115,19 +117,20 @@
                   <div class="well">
                     <figure class="calculation">
                       <h2>
-                        <span ng-show="sets.avg" ng-bind="sets.avg | number : 1"></span>
-                        <span ng-show="!sets.avg">0</span>
+                        <span ng-bind="state.metrics.avg | number : 1"></span>
                       </h2>
                       <figcaption>
                         <p>Average</p>
-                        <p class="small" ng-show="sets.sd">Standard Deviation {{sets.sd | number: 2}}</p>
+                        <p class="small" ng-show="state.metrics.sd">
+                          AVG {{state.metrics.avg | number: 1}} | STDEV {{state.metrics.sd | number: 1}}
+                        </p>
                       </figcaption>
                     </figure>
                   </div>
                 </div>
               </div>
-              <div ng-if="combinations > 1 && sets.max.damage > 0" class="col-sm-24 graph">
-                <nvd3 options="graphOptions" data="graphData"></nvd3> 
+              <div ng-if="state.sets.length > 1 && state.metrics.max > 0" class="col-sm-24 graph">
+                <nvd3 options="graphOptions" data="state.graphData"></nvd3> 
               </div>
             </div>
           </div>

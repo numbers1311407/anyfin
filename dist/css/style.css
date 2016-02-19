@@ -197,12 +197,18 @@ ul.card-list {
 
 figure.calculation {
   text-align: center;
-  height: 115px; }
+  height: 100px; }
   figure.calculation h2 {
     font-size: 35px;
-    line-height: 1; }
+    line-height: 1;
+    margin-bottom: 5px; }
   figure.calculation figcaption p {
-    margin: 0; }
+    margin: 0;
+    font-size: 16px; }
+  figure.calculation p.small {
+    font-size: 75%; }
+  figure.calculation figcaption p:first-child {
+    margin-bottom: 7px; }
 
 .fa-warning {
   color: #f0ad4e; }
