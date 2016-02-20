@@ -631,7 +631,7 @@
     };
   }]);
 
-  app.directive('deck', [function () {
+  app.directive('deckSelect', [function () {
     return {
       restrict: 'E',
       scope: {
