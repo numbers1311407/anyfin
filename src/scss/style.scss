@@ -348,3 +348,64 @@ figure.calculation {
     background-color: #a30000;
   }
 }
+
+.calculations, .set-graph {
+  margin-bottom: 1em;
+}
+
+table.murloc-set-table {
+  margin-bottom: 0;
+  .murloc-composition {
+    width: 90%;
+    font-size: 13px;
+    label {
+      margin: 0;
+    }
+    > div {
+      margin-top: 5px;
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+    ul {
+      display: inline;
+      list-style: none none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.1;
+      li {
+        display: inline;
+        &:before {
+          content: ", ";
+        }
+        &:first-child:before {
+          content: "";
+        }
+      }
+    }
+  }
+  th {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  th.last {
+    text-align: right;
+  }
+  tfoot td {
+    nav {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+    .pagination {
+      margin: 0;
+    }
+  }
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+  background-color: #fffff0;
+}
+.table>thead>tr>th, .table>thead>tr>td, .table>tbody>tr>th, .table>tbody>tr>td, .table>tfoot>tr>th, .table>tfoot>tr>td {
+  border-color: lighten(#CE7A34, 20%);
+}

@@ -68,7 +68,7 @@
       }
     },
     o: {
-      name: "Other Murlocs",
+      name: "Other Murloc",
       deckImg: 'assets/images/bars/murloc-tinyfin.png',
       cardImg: 'assets/images/cards/tinyfin.png',
       power: 1

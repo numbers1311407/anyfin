@@ -5,6 +5,19 @@
 $grid-columns: 24;
 $grid-gutter-width: 15px;
 $container-large-desktop: 1240px + $grid-gutter-width;
+
+$pagination-border: #CE7A34;
+$pagination-active-border: #CE7A34;
+$pagination-hover-border: lighten(#CE7A34, 5%);
+$pagination-disabled-border: lighten(#CE7A34, 5%);
+$pagination-hover-color: #530000;
+$pagination-color: #CE7A34;
+$pagination-active-color: #FFF;
+$pagination-bg: #ffffde;
+$pagination-active-bg: #CE7A34;
+$pagination-hover-bg: #FFF;
+$pagination-hover-color: #CE7A34;
+
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
 
 $fa-font-path: "../../assets/fonts";

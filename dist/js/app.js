@@ -148,7 +148,7 @@
       }
     },
     o: {
-      name: "Other Murlocs",
+      name: "Other Murloc",
       deckImg: 'assets/images/bars/murloc-tinyfin.png',
       cardImg: 'assets/images/cards/tinyfin.png',
       power: 1
@@ -476,10 +476,10 @@
 
     scope.graveyard = {
       b: 0,
-      g: 0,
       m: 0,
-      o: 0,
-      w: 0
+      w: 0,
+      g: 0,
+      o: 0
     };
 
     scope.graveyardDirty = function () {
@@ -548,6 +548,9 @@
         x: function(d){ return d.x; },
         y: function(d){ return d.y; },
         useInteractiveGuideline: true,
+        color: function () {
+          return "#640000";
+        },
         forceY: [0, 1],
         xAxis: {
           axisLabel: 'Damage',
@@ -676,6 +679,73 @@
 
     }
   }]);
+
+
+  app.directive('murlocSetDamage', [function () {
+    return {
+      restrict: 'E',
+      scope: {
+        set: '='
+      },
+      templateUrl: 'tmplMurlocSetDamage.html'
+    }
+  }]);
+
+
+  app.directive('murlocSetTable', [function () {
+    return {
+      restrict: 'E',
+      scope: {
+        sets: '='
+      },
+      link: function (scope, elem, attrs) {
+        scope.perPage = 5;
+        scope.sort = 1;
+        scope.predicate = 'damage';
+        scope.pageWindow = 5;
+
+        scope.setPage = function (page) {
+          if (page < 0) return;
+          if (page > scope.pages() - 1) return;
+
+          scope.page = page;
+          scope.offset = page * scope.perPage;
+        };
+
+        scope.toggleSort = function () {
+          scope.sort = 1 - scope.sort;
+          scope.setPage(0);
+        };
+
+        scope.pages = function () {
+          return Math.ceil(scope.sets.length / scope.perPage);
+        };
+
+        scope.pageRange = function () {
+          var pages = scope.pages();
+          var window = scope.pageWindow;
+          var start, end;
+
+          if (pages <= window) {
+            start = 0;
+            end = pages;
+          } else if (scope.page < pages - window) {
+            start = Math.max(0, scope.page - Math.floor(window/2));
+            end = start + window;
+          } else {
+            end = pages;
+            start = end - window;
+          }
+
+          return _.range(start, end);
+        };
+
+        scope.setPage(0);
+      },
+      templateUrl: 'tmplMurlocSetTable.html'
+    }
+  }]);
+
 
   app.directive('ngRightClick', function ($parse) {
     return function(scope, element, attrs) {

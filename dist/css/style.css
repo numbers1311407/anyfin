@@ -263,3 +263,47 @@ figure.calculation {
     color: #fff; }
   .btn-default:active:hover {
     background-color: #a30000; }
+
+.calculations, .set-graph {
+  margin-bottom: 1em; }
+
+table.murloc-set-table {
+  margin-bottom: 0; }
+  table.murloc-set-table .murloc-composition {
+    width: 90%;
+    font-size: 13px; }
+    table.murloc-set-table .murloc-composition label {
+      margin: 0; }
+    table.murloc-set-table .murloc-composition > div {
+      margin-top: 5px; }
+      table.murloc-set-table .murloc-composition > div:first-child {
+        margin-top: 0; }
+    table.murloc-set-table .murloc-composition ul {
+      display: inline;
+      list-style: none none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.1; }
+      table.murloc-set-table .murloc-composition ul li {
+        display: inline; }
+        table.murloc-set-table .murloc-composition ul li:before {
+          content: ", "; }
+        table.murloc-set-table .murloc-composition ul li:first-child:before {
+          content: ""; }
+  table.murloc-set-table th {
+    font-size: 14px;
+    white-space: nowrap; }
+  table.murloc-set-table th.last {
+    text-align: right; }
+  table.murloc-set-table tfoot td nav {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none; }
+  table.murloc-set-table tfoot td .pagination {
+    margin: 0; }
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #fffff0; }
+
+.table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td {
+  border-color: #e2b086; }

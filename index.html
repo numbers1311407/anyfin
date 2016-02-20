@@ -34,109 +34,6 @@
         </div>
 
         <div class="col-sm-24 col-md-17 col-lg-14">
-          <div class="output panel panel-default">
-            <div class="panel-heading clearfix">
-              <h4 class="panel-title pull-left">Anyfin Can Happen!</h4>
-              <div class="pull-right">
-                <a ng-if="state.history.length" class="btn btn-default" ng-click="back()">Step Back</a>
-                <a ng-if="dirty()" class="btn btn-default" ng-click="clear()">Reset All</a>
-              </div>
-              <div class="clearfix"></div>
-            </div>
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-sm-8">
-                  <div class="well">
-                    <figure class="calculation">
-                      <h2>
-                        <span ng-bind="state.sets.length"></span>
-                        <span ng-show="state.sets.total >= combinationLimit" class="titip-right titip-wrapped">
-                          <i class="fa fa-warning"></i>
-                          <span class="titip-content">
-                            You've reached the calculation limit for possible non-unique combinations 
-                            ({{combinationLimit}}).  This means some outcomes will be dropped and your results will not be accurate.
-                            Did that many murlocs really die?
-                          </span>
-                        </span>
-                      </h2>
-                      <figcaption>
-                        <p>
-                          <span ng-if="!state.sets.length || state.sets.length > 1">Possible Outcomes</span>
-                          <span ng-if="state.sets.length == 1">Guaranteed Outcome</span>
-                        </p>
-                        <p ng-if="state.sets.length > 1" class="small">
-                          (<span ng-bind="state.sets.total"></span><span ng-if="state.sets.total >= combinationLimit">+</span> variations)
-                        </p>
-                      </figcaption>
-                    </figure>
-                  </div>
-                </div>
-                <div class="col-sm-8">
-                  <div class="well">
-                    <figure class="calculation">
-                      <h2>
-                        <span class="damage-range">
-                          <span class="titip-bottom titip-link" data-title="No damage to explain yet!" ng-show="!state.sets.min">0</span>
-
-                          <span ng-show="state.sets.min" class="titip-bottom titip-wrapped">
-                            <span class="titip-link" ng-bind="state.metrics.min"></span>
-                            <span class="titip-content">
-                              <h4 ng-if="state.sets.min.onboard.length">On Board: <span ng-bind="state.sets.min.onboard.damage"></span></h4>
-                              <p ng-repeat="murloc in state.sets.min.onboard">
-                                {{murloc.name}}: {{murloc.attack}}
-                              </p>
-                              <h4 ng-if="state.sets.min.graveyard.length">Anyfin: <span ng-bind="state.sets.min.graveyard.damage"></span></h4>
-                              <p ng-repeat="murloc in state.sets.min.graveyard">
-                                {{murloc.name}}: {{murloc.attack}}
-                              </p>
-                            </span>
-                          </span>
-                        </span>
-                        <span ng-show="state.sets.length > 1" class="damage-range">
-                          <span class="small range-sep">to</span>
-                          <span class="titip-bottom titip-wrapped">
-                            <span class="titip-link" ng-bind="state.metrics.max"></span>
-                            <span class="titip-content">
-                              <h4 ng-if="state.sets.max.onboard.length">On Board: <span ng-bind="state.sets.max.onboard.damage"></span></h4>
-                              <p ng-repeat="murloc in state.sets.max.onboard">
-                                {{murloc.name}}: {{murloc.attack}}
-                              </p>
-                              <h4 ng-if="state.sets.max.graveyard.length">Anyfin: <span ng-bind="state.sets.max.graveyard.damage"></span></h4>
-                              <p ng-repeat="murloc in state.sets.max.graveyard">
-                                {{murloc.name}}: {{murloc.attack}}
-                              </p>
-                            </span>
-                          </span>
-                        </span>
-                      </h2>
-                      <figcaption>
-                        <p>Damage</p>
-                        <p class="small">Hover for details</p>
-                      </figcaption>
-                    </figure>
-                  </div>
-                </div>
-                <div class="col-sm-8">
-                  <div class="well">
-                    <figure class="calculation">
-                      <h2>
-                        <span ng-bind="state.metrics.avg | number : 1"></span>
-                      </h2>
-                      <figcaption>
-                        <p>Average</p>
-                        <p class="small" ng-show="state.metrics.sd">
-                          STDEV {{state.metrics.sd | number: 1}}
-                        </p>
-                      </figcaption>
-                    </figure>
-                  </div>
-                </div>
-              </div>
-              <div ng-if="state.sets.length > 1 && state.metrics.max > 0" class="col-sm-24 graph">
-                <nvd3 options="graphOptions" data="state.graphData"></nvd3> 
-              </div>
-            </div>
-          </div>
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
               <h4 class="panel-title pull-left">Your Board State - {{state.free()}} Slots Free</h4>
@@ -162,6 +59,91 @@
                   <label ng-if="card.murloc" class="card-minion-label">Base Power*</label>
                 </li>
               </ul>
+            </div>
+          </div>
+          <div class="output panel panel-default">
+            <div class="panel-heading clearfix">
+              <h4 class="panel-title pull-left">Anyfin Can Happen!</h4>
+              <div class="pull-right">
+                <a ng-if="state.history.length" class="btn btn-default" ng-click="back()">Step Back</a>
+                <a ng-if="dirty()" class="btn btn-default" ng-click="clear()">Reset All</a>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+
+            <div class="panel-body">
+              <div class="row calculations">
+                <div class="col-sm-8">
+                  <div class="well">
+                    <figure class="calculation">
+                      <h2>
+                        <span ng-bind="state.sets.length"></span>
+                        <span ng-show="state.sets.total >= combinationLimit" class="titip-right titip-wrapped">
+                          <i class="fa fa-warning"></i>
+                          <span class="titip-content">
+                            You've reached the calculation limit for possible non-unique combinations 
+                            ({{combinationLimit}}).  This means some outcomes will be dropped and your results will not be accurate.
+                            Did that many murlocs really die?
+                          </span>
+                        </span>
+                      </h2>
+                      <figcaption>
+                        <p>
+                          <span ng-if="!state.sets.length || state.sets.length > 1">Possible Outcomes</span>
+                          <span ng-if="state.sets.length == 1">Guaranteed Outcome</span>
+                        </p>
+                        <p ng-if="state.sets.length > 1" class="small">
+                          (<span ng-bind="state.sets.total"></span><span ng-if="state.sets.total >= combinationLimit">+</span> compositions)
+                        </p>
+                      </figcaption>
+                    </figure>
+                  </div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="well">
+                    <figure class="calculation">
+                      <h2>
+                        <span class="damage-range">
+                          <span class="titip-bottom titip-link" data-title="No damage to explain yet!" ng-show="!state.sets.min">0</span>
+                          <murloc-set-damage ng-shoow="state.sets.min" set="state.sets.min" />
+                        </span>
+                        <span ng-show="state.sets.length > 1" class="damage-range">
+                          <span class="small range-sep">to</span>
+                          <murloc-set-damage set="state.sets.max" />
+                        </span>
+                      </h2>
+                      <figcaption>
+                        <p>Damage</p>
+                        <p class="small">Hover for details</p>
+                      </figcaption>
+                    </figure>
+                  </div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="well">
+                    <figure class="calculation">
+                      <h2>
+                        <span ng-bind="state.metrics.avg | number : 1"></span>
+                      </h2>
+                      <figcaption>
+                        <p>Average</p>
+                        <p class="small" ng-show="state.metrics.sd">
+                          STDEV {{state.metrics.sd | number: 1}}
+                        </p>
+                      </figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" ng-if="state.sets.length > 1 && state.metrics.max > 0">
+                <div class="col-sm-24 set-graph">
+                  <nvd3 options="graphOptions" data="state.graphData"></nvd3> 
+                </div>
+                <div class="col-sm-24 set-table">
+                  <murloc-set-table sets="state.sets" />
+                </div>
+              </div>
             </div>
           </div>
           <div class="panel panel-default">
@@ -214,6 +196,84 @@
         </div>
       </div>
     </div>
+
+    <script id="tmplMurlocSetDamage.html" type="text/ng-template">
+      <span class="titip-bottom titip-wrapped">
+        <span class="titip-link" ng-bind="set.damage"></span>
+        <span class="titip-content">
+          <h4 ng-if="set.onboard.length">On Board: <span ng-bind="set.onboard.damage"></span></h4>
+          <p ng-repeat="murloc in set.onboard">
+            {{murloc.name}} - {{murloc.attack}}
+          </p>
+          <h4 ng-if="set.graveyard.length">Anyfin: <span ng-bind="set.graveyard.damage"></span></h4>
+          <p ng-repeat="murloc in set.graveyard">
+            {{murloc.name}} - {{murloc.attack}}
+          </p>
+        </span>
+      </span>
+    </script>
+
+    <script id="tmplMurlocSetTable.html" type="text/ng-template">
+      <table class="murloc-set-table table table-striped">
+        <thead>
+          <tr>
+            <th ng-click="toggleSort()">
+              <i ng-if="!sort" class="fa fa-sort-amount-asc"></i>
+              <i ng-if="sort" class="fa fa-sort-amount-desc"></i>
+              Dmg
+            </th>
+            <th>
+              Occ 
+              <span class="titip-top" data-title="Number of times this composition of murlocs occurred">
+                <i class="fa fa-info-circle"></i>
+              </span>
+            </th>
+            <th>
+              Composition 
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="set in sets | orderBy:predicate:sort | limitTo:perPage:offset">
+            <td class="murloc-damage">{{set.damage}}</td>
+            <td class="murloc-count">{{set.count}}</td>
+            <td class="murloc-composition">
+              <div ng-if="set.onboard.length">
+                <label>On Board: <span ng-bind="set.onboard.damage"></span></label> -
+                <ul>
+                  <li ng-repeat="murloc in set.onboard">{{murloc.name}} - {{murloc.attack}}</li>
+                </ul>
+              </div>
+              <div ng-if="set.graveyard.length"> 
+                <label>Anyfin: <span ng-bind="set.graveyard.damage"></span></label>
+                &bull;
+                <ul>
+                  <li ng-repeat="murloc in set.graveyard">{{murloc.name}} - {{murloc.attack}}</li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">
+              <nav>
+                <ul class="pagination pagination-sm" ng-show="pages() > 1">
+                  <li ng-class="{disabled: page == 0}" ng-if="pages() > pageWindow" ng-click="setPage(0)"><span>First</span></li>
+                  <li ng-class="{disabled: page == 0}" ng-click="setPage(page - 1)"><span>«</span></li>
+                  </li>
+                  <li ng-repeat="i in pageRange()" ng-class="{active: page == i}" ng-click="setPage(i)">
+                    <span>{{i + 1}}</span>
+                  </li>
+                  <li ng-class="{disabled: page == pages()-1}" ng-click="setPage(page + 1)"><span>»</span></li>
+                  <li ng-class="{disabled: page == pages()-1}" ng-if="pages() > pageWindow" ng-click="setPage(pages()-1)"><span>Last</span></li>
+                </ul>
+              </nav>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </script>
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
