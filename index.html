@@ -239,7 +239,8 @@
             <td class="murloc-count">{{set.count}}</td>
             <td class="murloc-composition">
               <div ng-if="set.onboard.length">
-                <label>On Board: <span ng-bind="set.onboard.damage"></span></label> -
+                <label>On Board: <span ng-bind="set.onboard.damage"></span></label>
+                &bull;
                 <ul>
                   <li ng-repeat="murloc in set.onboard">{{murloc.name}} - {{murloc.attack}}</li>
                 </ul>
