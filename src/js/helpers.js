@@ -4,6 +4,10 @@
   root.helpers.combinator = function (limit) {
     return function pick (set, k) {
       var i, j, combs, head, tailcombs;
+
+      if (!set.length) {
+        return [];
+      }
     
       if (!k || k >=set.length) {
         return [set];
