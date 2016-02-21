@@ -230,6 +230,9 @@ figure.calculation {
     color: #fff;
     text-shadow: 1px 1px 1em #CE7a34;
     text-transform: uppercase; }
+  .navbar-default form input[type=image] {
+    margin-top: 5px;
+    margin-right: -10px; }
 
 .panel-default {
   border-color: #CE7A34;
